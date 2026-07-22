@@ -53,8 +53,7 @@
   opacity: 0;
 }
 
-.mute-button,
-.replay-button {
+.mute-button {
   position: fixed;
   z-index: 3;
   top: clamp(1rem, 3vw, 2rem);
@@ -69,10 +68,6 @@
   opacity: 0.42;
   cursor: pointer;
   transition: opacity 200ms ease, color 200ms ease;
-}
-
-.replay-button {
-  top: clamp(2.9rem, 3vw + 1.9rem, 4.1rem);
 }
 
 .story-menu-button {
@@ -147,56 +142,13 @@
 }
 
 .mute-button:hover,
-.mute-button:focus-visible,
-.replay-button:hover,
-.replay-button:focus-visible {
+.mute-button:focus-visible {
   color: var(--ink-main);
   opacity: 0.9;
 }
 
 .mute-button.is-muted {
   text-decoration: line-through;
-}
-
-.music-settings {
-  position: fixed;
-  z-index: 3;
-  top: clamp(5rem, 3vw + 3.9rem, 6.2rem);
-  right: clamp(1rem, 3vw, 2.5rem);
-  display: none;
-  align-items: center;
-  gap: 0.45rem;
-  opacity: 0.38;
-  transition: opacity 200ms ease;
-}
-
-.app-shell[data-chapter='2'] .music-settings {
-  display: flex;
-}
-
-.music-settings:hover,
-.music-settings:focus-within {
-  opacity: 0.82;
-}
-
-.music-settings button {
-  border: 0;
-  padding: 0.35rem 0;
-  background: transparent;
-  color: var(--ink-dim);
-  font: 500 0.62rem/1 'Manrope', sans-serif;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.music-settings button.is-muted {
-  text-decoration: line-through;
-}
-
-.music-settings input[type='range'] {
-  width: 4.5rem;
-  accent-color: var(--ink-dim);
 }
 
 @keyframes cue-breathe {
@@ -230,7 +182,6 @@
   }
 
   .mute-button,
-  .replay-button,
   .story-menu-button {
     min-width: 2.75rem;
     min-height: 2.75rem;
@@ -242,31 +193,11 @@
     right: max(0.35rem, env(safe-area-inset-right, 0px));
   }
 
-  .replay-button {
-    top: calc(3rem + env(safe-area-inset-top, 0px));
-    right: max(0.35rem, env(safe-area-inset-right, 0px));
-  }
-
   .story-menu-button {
     top: calc(0.35rem + env(safe-area-inset-top, 0px));
     left: max(0.35rem, env(safe-area-inset-left, 0px));
   }
 
-  .music-settings {
-    top: calc(5.7rem + env(safe-area-inset-top, 0px));
-    right: max(0.75rem, env(safe-area-inset-right, 0px));
-    gap: 0.35rem;
-  }
-
-  .music-settings button {
-    min-height: 2.5rem;
-    padding-inline: 0.25rem;
-  }
-
-  .music-settings input[type='range'] {
-    width: 4rem;
-    min-height: 2.5rem;
-  }
 }
 
 @media (max-height: 520px) and (orientation: landscape) {
@@ -279,10 +210,6 @@
     margin-top: 1.6rem;
   }
 
-  .music-settings {
-    top: calc(0.4rem + env(safe-area-inset-top, 0px));
-    right: max(6.5rem, env(safe-area-inset-right, 0px));
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -102,9 +102,6 @@ type AppElements = {
   choices: HTMLElement;
   continueCue: HTMLElement;
   muteButton: HTMLButtonElement;
-  replayButton: HTMLButtonElement;
-  musicToggle: HTMLButtonElement;
-  musicVolume: HTMLInputElement;
 };
 
 type ExperienceState = 'intro' | 'waiting' | 'revealing' | 'choosing';
@@ -460,16 +457,9 @@ appRoot.innerHTML = `
     <button class="mute-button" id="mute-button" type="button" aria-label="Выключить музыку">
       <span aria-hidden="true">звук</span>
     </button>
-    <button class="replay-button" id="replay-button" type="button" aria-label="Начать сцену заново">
-      реплей
-    </button>
     <button class="story-menu-button" id="story-menu-button" type="button" aria-label="Вернуться к записям">
       записи
     </button>
-    <div class="music-settings" id="music-settings">
-      <button id="music-toggle" type="button">музыка</button>
-      <input id="music-volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="Громкость музыки">
-    </div>
 
     <section class="narrative-panel" aria-live="polite" aria-atomic="false">
       <div class="scene-time" id="scene-heading">02:43</div>
@@ -543,9 +533,6 @@ const elements: AppElements = {
   choices: queryOrThrow<HTMLElement>('#choices'),
   continueCue: queryOrThrow<HTMLElement>('#continue-cue'),
   muteButton: queryOrThrow<HTMLButtonElement>('#mute-button'),
-  replayButton: queryOrThrow<HTMLButtonElement>('#replay-button'),
-  musicToggle: queryOrThrow<HTMLButtonElement>('#music-toggle'),
-  musicVolume: queryOrThrow<HTMLInputElement>('#music-volume'),
 };
 
 const motionManager = new MotionManager();
@@ -1910,36 +1897,6 @@ async function boot(): Promise<void> {
     musicManager.setMuted(audioManager.isMuted());
     updateMuteControl();
     persist();
-  });
-
-  const updateMusicControls = (): void => {
-    const state = musicManager.snapshot();
-    elements.musicToggle.textContent = state.enabled ? 'музыка' : 'музыка выкл';
-    elements.musicToggle.classList.toggle('is-muted', !state.enabled);
-    elements.musicVolume.value = String(state.masterVolume);
-  };
-
-  elements.musicToggle.addEventListener('click', () => {
-    audioManager.onUserInteraction();
-    musicManager.unlock();
-    musicManager.setEnabled(!musicManager.snapshot().enabled);
-    updateMusicControls();
-    persist();
-  });
-
-  elements.musicVolume.addEventListener('input', () => {
-    musicManager.setMasterVolume(Number(elements.musicVolume.value));
-    persist();
-  });
-  updateMusicControls();
-
-  elements.replayButton.addEventListener('click', () => {
-    saveManager.clear();
-    if (activeChapter === 2) {
-      void startChapterTwo(true);
-    } else {
-      void restartStory(true);
-    }
   });
 
   elements.replayDialogCancel.addEventListener('click', () => {
