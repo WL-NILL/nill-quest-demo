@@ -1,0 +1,292 @@
+#app {
+  min-height: 100svh;
+}
+
+.app-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  overflow-x: hidden;
+  padding: clamp(2rem, 7vh, 5.5rem) clamp(1.35rem, 8vw, 9rem) 0;
+  cursor: pointer;
+  transition: background-color 900ms ease, color 700ms ease;
+}
+
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.narrative-panel {
+  position: relative;
+  width: auto;
+  max-width: 42rem;
+  margin-left: clamp(0rem, 8vw, 8rem);
+  padding-bottom: calc(clamp(5rem, 14vh, 9rem) + env(safe-area-inset-bottom, 0px));
+  transition: padding-top 1100ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.prose {
+  margin-top: clamp(2.5rem, 7vh, 5rem);
+  text-wrap: pretty;
+}
+
+.continue-cue {
+  width: 1.4rem;
+  height: 0.7rem;
+  margin-top: 0.35rem;
+  opacity: 0.34;
+  transition: opacity 500ms ease;
+}
+
+.continue-cue span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid var(--ink-dim);
+  animation: cue-breathe 1.65s steps(1, end) infinite;
+}
+
+.continue-cue.is-hidden {
+  opacity: 0;
+}
+
+.mute-button,
+.replay-button {
+  position: fixed;
+  z-index: 3;
+  top: clamp(1rem, 3vw, 2rem);
+  right: clamp(1rem, 3vw, 2.5rem);
+  border: 0;
+  padding: 0.4rem;
+  background: transparent;
+  color: var(--ink-dim);
+  font: 500 0.66rem/1 'Manrope', sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.42;
+  cursor: pointer;
+  transition: opacity 200ms ease, color 200ms ease;
+}
+
+.replay-button {
+  top: clamp(2.9rem, 3vw + 1.9rem, 4.1rem);
+}
+
+.story-menu-button {
+  position: fixed;
+  z-index: 3;
+  top: clamp(1rem, 3vw, 2rem);
+  left: clamp(1rem, 3vw, 2.5rem);
+  border: 0;
+  padding: 0.4rem;
+  background: transparent;
+  color: var(--ink-dim);
+  font: 500 0.64rem/1 'Manrope', sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.34;
+  cursor: pointer;
+  transition: color 220ms ease, opacity 220ms ease;
+}
+
+.story-menu-button:hover,
+.story-menu-button:focus-visible {
+  color: var(--ink-main);
+  opacity: 0.82;
+}
+
+.debug-next-significant {
+  display: block;
+  width: min(17.5rem, 100%);
+  margin-top: 1.35rem;
+  border: 1px solid rgba(116, 151, 190, 0.2);
+  border-radius: 0.16rem;
+  padding: 0.58rem 0.72rem;
+  background: rgba(7, 10, 15, 0.82);
+  color: rgba(176, 201, 228, 0.72);
+  font: 600 0.6rem/1 'Manrope', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease, opacity 180ms ease;
+}
+
+.debug-next-significant:hover,
+.debug-next-significant:focus-visible {
+  border-color: rgba(121, 167, 214, 0.42);
+  color: rgba(220, 234, 248, 0.94);
+  outline: none;
+}
+
+.debug-next-significant:disabled {
+  opacity: 0.38;
+  cursor: wait;
+}
+
+.debug-next-significant[hidden] {
+  display: none;
+}
+
+.screen-transition {
+  position: fixed;
+  z-index: 110;
+  inset: 0;
+  pointer-events: none;
+  background: #040508;
+  opacity: 0;
+  transition: opacity 460ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.screen-transition.is-active {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.mute-button:hover,
+.mute-button:focus-visible,
+.replay-button:hover,
+.replay-button:focus-visible {
+  color: var(--ink-main);
+  opacity: 0.9;
+}
+
+.mute-button.is-muted {
+  text-decoration: line-through;
+}
+
+.music-settings {
+  position: fixed;
+  z-index: 3;
+  top: clamp(5rem, 3vw + 3.9rem, 6.2rem);
+  right: clamp(1rem, 3vw, 2.5rem);
+  display: none;
+  align-items: center;
+  gap: 0.45rem;
+  opacity: 0.38;
+  transition: opacity 200ms ease;
+}
+
+.app-shell[data-chapter='2'] .music-settings {
+  display: flex;
+}
+
+.music-settings:hover,
+.music-settings:focus-within {
+  opacity: 0.82;
+}
+
+.music-settings button {
+  border: 0;
+  padding: 0.35rem 0;
+  background: transparent;
+  color: var(--ink-dim);
+  font: 500 0.62rem/1 'Manrope', sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.music-settings button.is-muted {
+  text-decoration: line-through;
+}
+
+.music-settings input[type='range'] {
+  width: 4.5rem;
+  accent-color: var(--ink-dim);
+}
+
+@keyframes cue-breathe {
+  0%, 42% { opacity: 0.18; }
+  43%, 100% { opacity: 0.82; }
+}
+
+@media (max-width: 700px) {
+  .app-shell {
+    padding:
+      calc(3.8rem + env(safe-area-inset-top, 0px))
+      max(1.1rem, env(safe-area-inset-right, 0px))
+      0
+      max(1.1rem, env(safe-area-inset-left, 0px));
+  }
+
+  .debug-next-significant {
+    min-height: 2.65rem;
+    max-width: 17.5rem;
+    margin-top: 1rem;
+  }
+
+  .narrative-panel {
+    width: 100%;
+    margin: 0;
+    padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .prose {
+    margin-top: clamp(2.1rem, 6vh, 3.25rem);
+  }
+
+  .mute-button,
+  .replay-button,
+  .story-menu-button {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0.65rem;
+  }
+
+  .mute-button {
+    top: calc(0.35rem + env(safe-area-inset-top, 0px));
+    right: max(0.35rem, env(safe-area-inset-right, 0px));
+  }
+
+  .replay-button {
+    top: calc(3rem + env(safe-area-inset-top, 0px));
+    right: max(0.35rem, env(safe-area-inset-right, 0px));
+  }
+
+  .story-menu-button {
+    top: calc(0.35rem + env(safe-area-inset-top, 0px));
+    left: max(0.35rem, env(safe-area-inset-left, 0px));
+  }
+
+  .music-settings {
+    top: calc(5.7rem + env(safe-area-inset-top, 0px));
+    right: max(0.75rem, env(safe-area-inset-right, 0px));
+    gap: 0.35rem;
+  }
+
+  .music-settings button {
+    min-height: 2.5rem;
+    padding-inline: 0.25rem;
+  }
+
+  .music-settings input[type='range'] {
+    width: 4rem;
+    min-height: 2.5rem;
+  }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .app-shell {
+    padding-top: calc(2.7rem + env(safe-area-inset-top, 0px));
+    padding-inline: max(1.5rem, env(safe-area-inset-left, 0px)) max(1.5rem, env(safe-area-inset-right, 0px));
+  }
+
+  .prose {
+    margin-top: 1.6rem;
+  }
+
+  .music-settings {
+    top: calc(0.4rem + env(safe-area-inset-top, 0px));
+    right: max(6.5rem, env(safe-area-inset-right, 0px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-transition {
+    transition: none;
+  }
+}

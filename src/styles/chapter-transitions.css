@@ -1,0 +1,182 @@
+.screen-transition {
+  position: fixed;
+  z-index: 110;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: #040508;
+  opacity: 0;
+  transition: opacity var(--screen-fade-in-ms, 1000ms) cubic-bezier(0.45, 0, 0.12, 1);
+}
+
+.screen-transition__media {
+  position: absolute;
+  inset: -3%;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 260ms ease;
+}
+
+.screen-transition__media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.9) contrast(1.06) brightness(0.58);
+}
+
+.screen-transition.is-held[data-transition='fracture'] .screen-transition__media {
+  opacity: 0.94;
+}
+
+.screen-transition.is-held[data-transition='fracture'] .screen-transition__media--fracture {
+  animation: chapter-transition-fracture-media 1150ms cubic-bezier(0.22, 1, 0.36, 1) infinite alternate;
+}
+
+.screen-transition.is-held[data-transition='fracture'] .screen-transition__media--fracture video {
+  filter: saturate(1.15) contrast(1.18) brightness(0.54) hue-rotate(-12deg);
+  animation: chapter-transition-fracture-video 920ms steps(2, end) infinite;
+}
+
+.screen-transition.is-active {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.screen-transition.is-revealing {
+  transition-duration: var(--screen-fade-out-ms, 1300ms);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.screen-transition__veil {
+  position: absolute;
+  inset: -4%;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 4;
+  mix-blend-mode: screen;
+  transition: opacity 420ms ease;
+}
+
+.screen-transition.is-held .screen-transition__veil {
+  opacity: 1;
+}
+
+/* Notebook - ink settling back into the page. */
+.screen-transition[data-transition='to-menu'] {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(18, 20, 26, 0.98) 0%, rgba(4, 5, 8, 1) 72%),
+    #030305;
+}
+
+.screen-transition[data-transition='to-menu'] .screen-transition__veil {
+  background:
+    radial-gradient(circle at 48% 38%, rgba(174, 169, 158, 0.08), transparent 34%),
+    repeating-linear-gradient(
+      112deg,
+      transparent 0 18px,
+      rgba(218, 211, 198, 0.018) 19px,
+      transparent 20px 41px
+    );
+  animation: chapter-transition-notebook 620ms ease-in-out infinite alternate;
+}
+
+/* Bar - warm neon bleeding back through smoke. */
+.screen-transition[data-transition='to-bar'] {
+  background:
+    radial-gradient(circle at 34% 36%, rgba(72, 38, 24, 0.34) 0%, transparent 42%),
+    radial-gradient(circle at 68% 72%, rgba(36, 22, 18, 0.28) 0%, transparent 48%),
+    #060504;
+}
+
+.screen-transition[data-transition='to-bar'] .screen-transition__veil {
+  background:
+    radial-gradient(circle at 40% 30%, rgba(255, 176, 96, 0.12), transparent 36%),
+    radial-gradient(circle at 62% 68%, rgba(120, 72, 48, 0.1), transparent 40%);
+  animation: chapter-transition-warm-drift 680ms ease-in-out infinite alternate;
+}
+
+/* Fight - cold threshold from the menu. */
+.screen-transition[data-transition='to-fight'] {
+  background: #020308;
+}
+
+.screen-transition[data-transition='to-fight'] .screen-transition__veil {
+  background: #000;
+  mix-blend-mode: normal;
+  animation: none;
+}
+
+/* Chapter I → II - memory shears apart at 02:43. */
+.screen-transition[data-transition='fracture'] {
+  background: #020308;
+}
+
+.screen-transition[data-transition='fracture'] .screen-transition__veil {
+  background:
+    radial-gradient(circle at 50% 46%, rgba(168, 197, 224, 0.11), transparent 31%),
+    #000;
+  mix-blend-mode: normal;
+  animation: chapter-transition-fracture-pulse 1080ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.screen-transition[data-transition='fracture'] .screen-transition__media {
+  display: none;
+}
+
+@keyframes chapter-transition-notebook {
+  from {
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+  to {
+    transform: translateY(-1px) scale(1.004);
+    filter: blur(0.35px);
+  }
+}
+
+@keyframes chapter-transition-warm-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+    filter: hue-rotate(0deg);
+  }
+  to {
+    transform: translate(-1px, 0.5px) scale(1.006);
+    filter: hue-rotate(4deg);
+  }
+}
+
+@keyframes chapter-transition-cold-drift {
+  from {
+    transform: translate(0, 0) scale(1.002);
+    filter: saturate(1);
+  }
+  to {
+    transform: translate(1px, -0.5px) scale(1.008);
+    filter: saturate(1.12) hue-rotate(-6deg);
+  }
+}
+
+@keyframes chapter-transition-fracture-pulse {
+  0% { opacity: 0; filter: brightness(0.7); }
+  18% { opacity: 0.42; filter: brightness(1.22); }
+  31% { opacity: 0.13; filter: brightness(0.82); }
+  48% { opacity: 0.3; filter: brightness(1.08); }
+  100% { opacity: 1; filter: brightness(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-transition,
+  .screen-transition.is-revealing {
+    transition-duration: 1ms;
+  }
+
+  .screen-transition.is-held .screen-transition__veil,
+  .screen-transition[data-transition] .screen-transition__veil {
+    animation: none;
+  }
+
+  .screen-transition.is-held[data-transition='fracture'] .screen-transition__media {
+    transform: none;
+  }
+}

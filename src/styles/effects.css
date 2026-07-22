@@ -1,0 +1,1484 @@
+.line {
+  opacity: 0;
+  filter: blur(2px);
+  transform: translateY(8px);
+  animation: reveal 880ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.is-skipping-beat .line {
+  animation-duration: 0.01ms;
+}
+
+.is-debug-fast-forwarding .line,
+.is-debug-fast-forwarding .choice-button {
+  animation-duration: 0.01ms !important;
+  animation-delay: 0ms !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* A few lines carry the instability in the type itself. These cues are
+   deliberately sparse: they mark a repeated motion, a forced version, or a
+   terminal reconstruction rather than decorating every beat. */
+.app-shell[data-chapter='2'] .line[data-line-id='fight_first_mismatch_02'],
+.app-shell[data-chapter='2'] .line[data-line-id='fight_stance_fracture_02'],
+.app-shell[data-chapter='2'] .line[data-line-id='fight_stance_fracture_03'] {
+  animation:
+    reveal 880ms cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    fight-type-afterimage 1700ms 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2'] .line[data-line-id$='_unease'] {
+  animation:
+    reveal 880ms cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    fight-type-unease 1900ms 420ms ease-out both;
+}
+
+.app-shell[data-chapter='2'] .line[data-line-id='fight_unsupported_title'],
+.app-shell[data-chapter='2'] .line[data-line-id='fight_collapse_title'],
+.app-shell[data-chapter='2'] .line[data-line-id='fight_perfect_title'] {
+  animation:
+    reveal 1050ms cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    fight-type-terminal 2400ms 520ms ease-out both;
+}
+
+/* Accumulated contradictions make the words lose their fixed position while
+   the literary column itself remains stable and readable. Individual text
+   wrappers let this coexist with the normal line reveal animation. */
+.app-shell[data-chapter='2'][data-memory-erosion='low']
+  .line > :is(.line__text, .dialogue__text) {
+  animation: memory-line-float-low 8.5s ease-in-out infinite alternate;
+}
+
+.app-shell[data-chapter='2'][data-memory-erosion='mid']
+  .line > :is(.line__text, .dialogue__text) {
+  animation: memory-line-float-mid 6.4s ease-in-out infinite alternate;
+}
+
+.app-shell[data-chapter='2'][data-memory-erosion='critical']
+  .line > :is(.line__text, .dialogue__text) {
+  animation: memory-line-float-critical 3.6s ease-in-out infinite alternate;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-line-id^='fight_collapse_'] > :is(.line__text, .dialogue__text) {
+  display: inline-block;
+  animation: probability-text-split 3.1s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  transform-origin: 28% 55%;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-line-id^='fight_collapse_']:nth-child(3n + 1) > :is(.line__text, .dialogue__text) {
+  animation-delay: -1.4s;
+  animation-direction: alternate-reverse;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-line-id^='fight_collapse_']:nth-child(3n + 2) > :is(.line__text, .dialogue__text) {
+  animation-delay: -2.3s;
+}
+
+.app-shell[data-chapter='2'] .line[data-line-id='fight_collapse_title'] {
+  margin-block: 2.4em 2em;
+  color: rgba(202, 220, 239, 0.95);
+  font-size: 1.08em;
+  letter-spacing: 0.08em;
+}
+
+.app-shell[data-chapter='2'] .line[data-line-id='fight_collapse_title'] > .line__text {
+  animation: probability-title-break 1.7s steps(1, end) infinite;
+  text-shadow:
+    -0.08em 0 rgba(109, 157, 205, 0.24),
+    0.07em 0 rgba(174, 98, 91, 0.13),
+    0 0 1.2rem rgba(111, 159, 205, 0.18);
+}
+
+.app-shell[data-chapter='2'][data-memory-erosion] .line:nth-child(3n + 1) > :is(.line__text, .dialogue__text) {
+  animation-delay: -2.1s;
+  animation-direction: alternate-reverse;
+}
+
+.app-shell[data-chapter='2'][data-memory-erosion] .line:nth-child(3n + 2) > :is(.line__text, .dialogue__text) {
+  animation-delay: -4.7s;
+}
+
+.layer-unknown {
+  text-shadow: 0 0 8px color-mix(in srgb, var(--ink-unknown) 18%, transparent);
+}
+
+/* An editorial mark made by the recollection itself. Red means that two
+   details resist each other, not that the highlighted word is objectively
+   false. The uneven fill arrives after the text so it feels hand-marked. */
+.memory-mark {
+  position: relative;
+  z-index: 0;
+  display: inline;
+  padding-inline: 0.025em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.memory-mark::before,
+.memory-mark::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.memory-mark--conflict {
+  animation: memory-marker-conflict-ink 1250ms 310ms ease-out both;
+}
+
+.memory-mark--conflict::before {
+  left: -0.08em;
+  right: -0.07em;
+  bottom: 0.04em;
+  height: 0.42em;
+  opacity: 0;
+  background:
+    linear-gradient(96deg, rgba(125, 34, 40, 0.1), rgba(165, 55, 54, 0.3) 42%, rgba(112, 28, 38, 0.18));
+  clip-path: polygon(0 28%, 8% 17%, 21% 24%, 36% 10%, 53% 20%, 69% 7%, 83% 19%, 100% 12%, 99% 83%, 84% 76%, 66% 91%, 47% 79%, 29% 92%, 13% 78%, 1% 88%);
+  animation: memory-marker-fill 940ms 410ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.memory-mark--conflict::after {
+  left: -0.035em;
+  right: -0.025em;
+  bottom: 0.015em;
+  height: 1px;
+  opacity: 0;
+  background: rgba(192, 79, 72, 0.68);
+  box-shadow: 0 0 0.45rem rgba(164, 55, 58, 0.16);
+  animation: memory-marker-stroke 720ms 300ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.memory-mark--uncertain {
+  color: rgba(216, 225, 236, 0.9);
+  animation: memory-word-uncertain 2300ms 420ms cubic-bezier(0.45, 0, 0.55, 1) both;
+}
+
+.memory-mark--uncertain::before,
+.memory-mark--uncertain::after {
+  display: none;
+}
+
+/* Word-level failures. Both readings occupy the same typographic space so a
+   rewrite never makes the paragraph jump. The effect starts only after the
+   original phrase has had time to be read. */
+.memory-mutation {
+  position: relative;
+  display: inline-grid;
+  grid-template: 'word';
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 100%;
+  vertical-align: baseline;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: inherit;
+  isolation: isolate;
+}
+
+.memory-mutation__original,
+.memory-mutation__replacement {
+  position: relative;
+  grid-area: word;
+}
+
+.memory-mutation__replacement {
+  opacity: 0;
+  color: rgba(205, 220, 237, 0.96);
+  text-shadow: 0 0 0.55rem rgba(113, 160, 205, 0.14);
+}
+
+.memory-mutation--rewrite::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  inset: -0.055em -0.09em -0.015em;
+  pointer-events: none;
+  opacity: 0;
+  background: rgba(6, 14, 27, 0.96);
+  -webkit-mask-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 0.13em,
+    #000 0.13em 1.23em,
+    transparent 1.23em 1.55em
+  );
+  mask-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 0.13em,
+    #000 0.13em 1.23em,
+    transparent 1.23em 1.55em
+  );
+  clip-path: polygon(
+    0.15% 7%,
+    99.7% 1%,
+    100% 17%,
+    99.65% 37%,
+    100% 56%,
+    99.72% 78%,
+    100% 97%,
+    0 100%,
+    0.35% 73%,
+    0 39%
+  );
+  transform: scaleX(0);
+  transform-origin: left 72%;
+  box-shadow:
+    inset 0 0.04em rgba(74, 105, 140, 0.1),
+    0.08em 0 0.2em rgba(72, 105, 143, 0.08);
+  animation: memory-rewrite-erasure 1500ms 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.memory-mutation--rewrite.is-rewritten .memory-mutation__original {
+  z-index: 3;
+  color: rgba(218, 229, 241, 0.98);
+  text-shadow: 0 0 0.42rem rgba(104, 148, 190, 0.1);
+}
+
+.memory-mutation--rewrite .memory-mutation__original {
+  animation: memory-rewrite-original 2100ms 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.memory-mutation--rewrite .memory-mutation__replacement {
+  animation: memory-rewrite-replacement 2100ms 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.memory-mutation--alternate .memory-mutation__original {
+  animation: memory-alternate-original 3100ms 500ms steps(1, end) both;
+}
+
+.memory-mutation--alternate .memory-mutation__replacement {
+  animation: memory-alternate-replacement 3100ms 500ms steps(1, end) both;
+}
+
+/* Anime.js owns the actual letters for enhanced mutations. Keeping the old
+   CSS animation disabled here prevents both readings from settling on top of
+   each other when their lengths differ. */
+.memory-mutation.is-anime-controlled .memory-mutation__original,
+.memory-mutation.is-anime-controlled .memory-mutation__replacement,
+.memory-mutation.is-text-effect-settled .memory-mutation__original,
+.memory-mutation.is-text-effect-settled .memory-mutation__replacement,
+.memory-mark--uncertain.is-anime-controlled {
+  animation: none;
+}
+
+.memory-mutation--rewrite.is-text-effect-settled::after {
+  animation: none;
+  opacity: 0;
+}
+
+.memory-mutation.is-anime-controlled .memory-mutation__replacement,
+.memory-mutation.is-text-effect-settled .memory-mutation__replacement {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: max-content;
+  max-width: none;
+  opacity: 0;
+}
+
+.memory-mutation--alternate.is-text-effect-settled .memory-mutation__original {
+  color: rgba(215, 224, 235, 0.9);
+  text-shadow: 0 0 0.42rem rgba(119, 153, 188, 0.1);
+}
+
+.memory-char {
+  will-change: transform, opacity, filter;
+}
+
+.memory-char--probability,
+.memory-word--unsupported,
+.memory-word--assembly,
+.memory-word--forced,
+.memory-word--flicker,
+.memory-word--perfect,
+.memory-word--partial {
+  will-change: transform, opacity, filter;
+}
+
+/* Anime.js v4 owns semantic memory failures. The readable text remains in
+   normal flow; generated recollections are aria-hidden and absolutely
+   positioned, so a fracture never changes line wrapping or speaker layout. */
+.line.is-anime-memory-effect > :is(.line__text, .dialogue__text) {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+  animation: none !important;
+}
+
+.line.is-anime-memory-effect > :is(.line__text, .dialogue__text)::before,
+.line.is-anime-memory-effect > :is(.line__text, .dialogue__text)::after {
+  content: none !important;
+  animation: none !important;
+}
+
+.memory-anime-echo {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  width: 100%;
+  color: rgba(153, 190, 224, 0.28);
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity, filter;
+}
+
+.memory-anime-echo--cold {
+  color: rgba(116, 169, 219, 0.3);
+  text-shadow: 0 0 0.55rem rgba(94, 151, 207, 0.12);
+}
+
+.memory-anime-echo--pale {
+  color: rgba(207, 222, 236, 0.22);
+}
+
+.memory-anime-echo--conflict {
+  color: rgba(176, 91, 91, 0.22);
+  text-shadow: 0 0 0.45rem rgba(143, 62, 67, 0.1);
+}
+
+.line[data-anime-memory-effect='forced'] > :is(.line__text, .dialogue__text) {
+  color: rgba(226, 235, 244, 0.98);
+}
+
+.line[data-anime-memory-effect='perfect-unnatural'] > :is(.line__text, .dialogue__text),
+.line[data-anime-memory-effect='correction'] > :is(.line__text, .dialogue__text) {
+  color: rgba(215, 231, 246, 0.98);
+}
+
+.memory-mutation--split-word .memory-mutation__original {
+  animation: memory-split-original 1750ms 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.memory-mutation--split-word .memory-mutation__replacement {
+  color: rgba(174, 193, 216, 0.72);
+  animation: memory-split-replacement 1750ms 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fx-memory-lock .narrative-panel {
+  text-shadow: 0 0 18px color-mix(in srgb, var(--cold-accent) 8%, transparent);
+}
+
+.fx-memory-drift .narrative-panel {
+  text-shadow: 0 0 20px color-mix(in srgb, var(--cold-accent) 5%, transparent);
+}
+
+.fx-memory-drift[data-active-layer='archive'] .narrative-panel {
+  text-shadow: 0 0 16px color-mix(in srgb, #8aaec8 9%, transparent);
+}
+
+.fx-memory-drift[data-memory-phase='fracture'] .narrative-panel {
+  text-shadow: 0 0 24px rgba(113, 151, 187, 0.09);
+}
+
+/* A passing shuttle is felt through the type, but never enough to hurt
+   readability. It lives on the outer panel so it can coexist with the city
+   memory's slower drift. */
+.fx-shuttle-rumble .narrative-panel {
+  animation: shuttle-text-rumble 2400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Chapter II Ink visual/memory cues. They are short state pulses rather than
+   permanent DOM layers, keeping the pre-rendered background inexpensive. */
+.app-shell[data-chapter='2'][data-visual-effect='brief_shake'] .narrative-panel,
+.app-shell[data-chapter='2'][data-memory-cue='flicker'] .narrative-panel {
+  animation: fight-brief-shake 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2'][data-visual-effect='brief_shake'] .chapter-fight-background__video,
+.app-shell[data-chapter='2'][data-memory-cue='flicker'] .chapter-fight-background__video {
+  animation: fight-video-flicker 720ms steps(1, end) both;
+}
+
+.app-shell[data-chapter='2'][data-visual-effect='causal_gap'] .narrative-panel {
+  animation: fight-causal-gap 1750ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* In the perfect version the room does not glitch and recover. It gradually
+   gives up every unnecessary possibility and keeps yielding until Nill leaves
+   the reconstruction. The motion is applied to the existing video layer, so
+   it adds no new composited scene or script-driven effect. */
+.app-shell[data-chapter='2'].fx-probability-pull
+  .chapter-fight-background__video {
+  transform-origin: 54% 48%;
+  animation: fight-probability-pull 18s cubic-bezier(0.45, 0, 0.22, 1) both;
+}
+
+.app-shell[data-chapter='2'].fx-probability-pull
+  .chapter-fight-background::before {
+  background: rgba(2, 8, 19, 0.18);
+}
+
+.app-shell[data-chapter='2'].fx-probability-pull .narrative-panel {
+  text-shadow:
+    0 0 18px rgba(76, 139, 196, 0.07),
+    0 0 42px rgba(38, 93, 151, 0.035);
+}
+
+.app-shell[data-chapter='2'][data-visual-effect='bluespace_correction']
+  .chapter-fight-background::after {
+  background: rgba(2, 5, 12, 0.58);
+  animation: bluespace-room-blink 1480ms steps(1, end) both;
+}
+
+.app-shell[data-chapter='2'][data-visual-effect='bluespace_correction']
+  .chapter-fight-background__video {
+  transform-origin: 54% 48%;
+  animation: bluespace-room-realign 1480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2'][data-visual-effect='clock_focus'] .chapter-fight-background::after {
+  opacity: 1;
+  box-shadow: inset 0 0 18rem 5rem rgba(0, 8, 28, 0.92);
+}
+
+.app-shell[data-chapter='2'][data-memory-cue='perfect_sequence'] .chapter-fight-background__video,
+.app-shell[data-chapter='2'][data-visual-effect='unnatural_stillness'] .chapter-fight-background__video {
+  filter: saturate(0.55) contrast(1.16) brightness(0.72);
+  opacity: 0.42;
+}
+
+.app-shell[data-chapter='2'][data-memory-cue='partial_stability'] .chapter-fight-background__video,
+.app-shell[data-chapter='2'][data-visual-effect='partial_stability'] .chapter-fight-background__video,
+.app-shell[data-chapter='2'][data-memory-cue='match'] .chapter-fight-background__video,
+.app-shell[data-chapter='2'][data-memory-cue='anchor_created'] .chapter-fight-background__video {
+  filter: saturate(0.74) contrast(1.04) brightness(0.82);
+}
+
+.app-shell[data-chapter='2'][data-memory-cue='contradiction'] .narrative-panel,
+.app-shell[data-chapter='2'][data-memory-cue='spatial_contradiction'] .narrative-panel {
+  animation: fight-memory-contradiction 1500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2'][data-memory-cue='contradiction']
+  .chapter-fight-background__video {
+  animation: fight-memory-desaturate 1550ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2'][data-memory-cue='force_anchor'] .narrative-panel {
+  animation: fight-force-anchor 1050ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* CSS echo copies are the no-script/reduced-motion fallback. During normal
+   playback Anime.js replaces them with timed, aria-hidden DOM echoes whose
+   movement reflects the exact kind of memory failure. */
+.app-shell[data-chapter='2']
+  .line[data-memory-cue] > :is(.line__text, .dialogue__text),
+.app-shell[data-chapter='2']
+  .line[data-visual-effect='motion_repeat'] > :is(.line__text, .dialogue__text),
+.app-shell[data-chapter='2']
+  .line[data-visual-effect='double_position'] > :is(.line__text, .dialogue__text),
+.app-shell[data-chapter='2']
+  .line[data-visual-effect='object_double'] > :is(.line__text, .dialogue__text),
+.app-shell[data-chapter='2']
+  .line[data-visual-effect='edward_split'] > :is(.line__text, .dialogue__text) {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-memory-cue] > :is(.line__text, .dialogue__text)::before,
+.app-shell[data-chapter='2']
+  .line[data-memory-cue] > :is(.line__text, .dialogue__text)::after,
+.app-shell[data-chapter='2']
+  .line[data-visual-effect] > :is(.line__text, .dialogue__text)::before,
+.app-shell[data-chapter='2']
+  .line[data-visual-effect] > :is(.line__text, .dialogue__text)::after {
+  content: attr(data-echo);
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  width: 100%;
+  color: rgba(153, 190, 224, 0.28);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='match'] > :is(.line__text, .dialogue__text),
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='anchor_created'] > :is(.line__text, .dialogue__text) {
+  animation: memory-assembly-lock 1320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='match'] > :is(.line__text, .dialogue__text)::before,
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='anchor_created'] > :is(.line__text, .dialogue__text)::before {
+  animation: memory-copy-converge-left 1040ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='match'] > :is(.line__text, .dialogue__text)::after,
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='anchor_created'] > :is(.line__text, .dialogue__text)::after {
+  animation: memory-copy-converge-right 1160ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='force_anchor'] > :is(.line__text, .dialogue__text) {
+  animation: memory-force-lock 1180ms steps(2, end) both;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='force_anchor'] > :is(.line__text, .dialogue__text)::before,
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='force_anchor'] > :is(.line__text, .dialogue__text)::after {
+  animation: memory-copy-forced 1050ms steps(3, end) both;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='contradiction'] > :is(.line__text, .dialogue__text)::before,
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='spatial_contradiction'] > :is(.line__text, .dialogue__text)::before {
+  animation: memory-copy-reject-left 1450ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='contradiction'] > :is(.line__text, .dialogue__text)::after,
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='spatial_contradiction'] > :is(.line__text, .dialogue__text)::after {
+  color: rgba(178, 110, 106, 0.2);
+  animation: memory-copy-reject-right 1450ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-memory-cue='partial_stability'] > :is(.line__text, .dialogue__text) {
+  animation: memory-partial-lock 1600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-visual-effect='motion_repeat'] > :is(.line__text, .dialogue__text)::before,
+.app-shell[data-chapter='2']
+  .line[data-visual-effect='double_position'] > :is(.line__text, .dialogue__text)::before,
+.app-shell[data-chapter='2']
+  .line[data-visual-effect='object_double'] > :is(.line__text, .dialogue__text)::before,
+.app-shell[data-chapter='2']
+  .line[data-visual-effect='edward_split'] > :is(.line__text, .dialogue__text)::before {
+  animation: memory-copy-remain-left 1850ms cubic-bezier(0.45, 0, 0.55, 1) both;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-visual-effect='motion_repeat'] > :is(.line__text, .dialogue__text)::after,
+.app-shell[data-chapter='2']
+  .line[data-visual-effect='double_position'] > :is(.line__text, .dialogue__text)::after,
+.app-shell[data-chapter='2']
+  .line[data-visual-effect='object_double'] > :is(.line__text, .dialogue__text)::after,
+.app-shell[data-chapter='2']
+  .line[data-visual-effect='edward_split'] > :is(.line__text, .dialogue__text)::after {
+  animation: memory-copy-remain-right 1850ms cubic-bezier(0.45, 0, 0.55, 1) both;
+}
+
+/* This pain is useful precisely because it is ordinary and physical. Keep
+   the movement close to the struck line instead of treating it as another
+   spectacular fight impact. */
+.app-shell[data-chapter='2']
+  .line[data-line-id='fight_response_05'] > .line__text {
+  animation: pain-shoe-slip 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-line-id='fight_response_06'] > .line__text {
+  animation: pain-knee-jolt 520ms cubic-bezier(0.2, 0.9, 0.28, 1) both;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-line-id='fight_response_07'] > .line__text {
+  animation: pain-low-throb 1180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2']
+  .line[data-line-id='fight_response_08'] > .line__text {
+  animation: pain-anchor-settle 1350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2'][data-visual-effect='pain-jolt']
+  .chapter-fight-background__video,
+.app-shell[data-chapter='2'][data-visual-effect='pain-throb']
+  .chapter-fight-background__video {
+  animation: pain-background-constrict 980ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* The remembered fight ends before the room can catch up: a hard retinal
+   flare, then a short, nearly colourless afterimage. */
+.app-shell[data-chapter='2'][data-visual-effect='fight_aftermath_flash']
+  .chapter-fight-background::after,
+.app-shell[data-chapter='2'][data-visual-effect='memory_return_flash']
+  .chapter-fight-background::after {
+  animation: fight-aftermath-flash 1550ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2'][data-visual-effect='fight_aftermath_flash']
+  .narrative-panel,
+.app-shell[data-chapter='2'][data-visual-effect='memory_return_flash']
+  .narrative-panel {
+  animation: fight-aftermath-text 1250ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2'][data-visual-effect='impact_blackout']::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background: #000;
+  opacity: 0;
+  animation: fight-impact-blackout 1650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2'][data-visual-effect='impact_blackout']
+  .narrative-panel {
+  animation: fight-impact-disorientation 1650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2'][data-visual-effect='temple_pain_flash']
+  .chapter-fight-background::after {
+  animation: fight-temple-pain-flash 1320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2'][data-visual-effect='temple_pain_flash']
+  .chapter-fight-background__video {
+  animation: fight-temple-pain-video 1240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-shell[data-chapter='2'][data-visual-effect='temple_pain_flash']
+  .narrative-panel {
+  animation: fight-temple-pain-text 1180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.chapter-fight-background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 700ms ease, box-shadow 900ms ease;
+}
+
+@keyframes fight-brief-shake {
+  0%, 100% { transform: translate(0); }
+  18% { transform: translate(-1.8px, 0.8px); }
+  37% { transform: translate(1.3px, -0.6px); }
+  58% { transform: translate(-0.7px, 0.35px); }
+}
+
+@keyframes fight-video-flicker {
+  0%, 100% { opacity: 0.52; }
+  16% { opacity: 0.31; }
+  27% { opacity: 0.55; }
+  39% { opacity: 0.39; }
+  51% { opacity: 0.5; }
+}
+
+@keyframes fight-double-position {
+  0%, 100% { transform: translateX(0); text-shadow: none; }
+  28% { transform: translateX(0.7px); text-shadow: -2px 0 rgba(87, 137, 190, 0.18), 2px 0 rgba(151, 78, 78, 0.08); }
+  54% { transform: translateX(-0.45px); text-shadow: 1px 0 rgba(87, 137, 190, 0.14); }
+}
+
+@keyframes fight-hard-double {
+  0%, 100% { transform: translate(0); text-shadow: none; }
+  24% { transform: translateX(-1px); text-shadow: 3px 0 rgba(87, 137, 190, 0.22), -3px 0 rgba(151, 78, 78, 0.11); }
+  48% { transform: translate(1px, -0.5px); text-shadow: -2px 0 rgba(87, 137, 190, 0.2); }
+  72% { transform: translateX(-0.5px); text-shadow: 2px 0 rgba(151, 78, 78, 0.09); }
+}
+
+@keyframes fight-causal-gap {
+  0%, 100% { filter: none; text-shadow: none; }
+  34% { filter: contrast(0.78) brightness(0.82); text-shadow: 0.08em 0 rgba(104, 145, 188, 0.12); }
+  61% { filter: contrast(0.92) brightness(0.9); text-shadow: -0.035em 0 rgba(104, 145, 188, 0.08); }
+}
+
+@keyframes fight-probability-pull {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+    filter: saturate(0.78) contrast(1.02) brightness(0.86);
+  }
+  34% {
+    transform: scale(1.025, 1.012) translate3d(-0.35%, 0.22%, 0);
+    filter: saturate(0.64) contrast(1.06) brightness(0.8);
+  }
+  68% {
+    transform: scale(1.047, 1.024) translate3d(0.42%, -0.28%, 0);
+    filter: saturate(0.48) contrast(1.1) brightness(0.74);
+  }
+  100% {
+    transform: scale(1.07, 1.035) translate3d(-0.2%, -0.4%, 0);
+    filter: saturate(0.34) contrast(1.13) brightness(0.68);
+  }
+}
+
+@keyframes bluespace-room-blink {
+  0%, 100% { opacity: 0; }
+  12% { opacity: 0.22; }
+  18% { opacity: 0.04; }
+  37% { opacity: 0.3; }
+  44% { opacity: 0.07; }
+  66% { opacity: 0.18; }
+  73% { opacity: 0.03; }
+}
+
+@keyframes bluespace-room-realign {
+  0% {
+    transform: scale(1.045) translate3d(0, 0, 0);
+    filter: saturate(0.5) contrast(1.08) brightness(0.75) blur(0);
+  }
+  16% {
+    transform: scale(1.075, 1.035) translate3d(-0.9%, 0.35%, 0);
+    filter: saturate(0.34) contrast(1.16) brightness(0.64) blur(1.2px);
+  }
+  39% {
+    transform: scale(1.055, 1.07) translate3d(0.75%, -0.52%, 0);
+    filter: saturate(0.28) contrast(1.2) brightness(0.59) blur(0.35px);
+  }
+  68% {
+    transform: scale(1.085, 1.045) translate3d(-0.38%, -0.22%, 0);
+    filter: saturate(0.32) contrast(1.17) brightness(0.63) blur(0.75px);
+  }
+  100% {
+    transform: scale(1.07, 1.035) translate3d(-0.2%, -0.4%, 0);
+    filter: saturate(0.34) contrast(1.13) brightness(0.68) blur(0);
+  }
+}
+
+@keyframes fight-memory-contradiction {
+  0%, 100% { filter: none; }
+  22% { filter: blur(0.35px); text-shadow: 0 0 14px rgba(103, 155, 209, 0.18); }
+  52% { filter: none; text-shadow: 1px 0 rgba(116, 160, 207, 0.14); }
+}
+
+@keyframes fight-memory-desaturate {
+  0%, 100% {
+    filter: grayscale(0) saturate(1) brightness(1);
+  }
+  30% {
+    filter: grayscale(0.82) saturate(0.24) brightness(0.72);
+  }
+  58% {
+    filter: grayscale(0.52) saturate(0.48) brightness(0.82);
+  }
+}
+
+@keyframes fight-force-anchor {
+  0% { transform: translateX(0); filter: blur(0); }
+  18% { transform: translateX(1.2px); filter: blur(0.45px); }
+  31% { transform: translateX(-0.5px); filter: blur(0); }
+  45%, 100% { transform: translateX(0); filter: blur(0); }
+}
+
+@keyframes memory-assembly-lock {
+  0% {
+    translate: 0.12em -0.035em;
+    letter-spacing: 0.026em;
+    filter: blur(0.55px);
+    text-shadow: -0.06em 0 rgba(132, 178, 219, 0.18);
+  }
+  28% {
+    translate: -0.035em 0.018em;
+    letter-spacing: 0.012em;
+    filter: blur(0.12px);
+  }
+  58% {
+    translate: 0.012em 0;
+    text-shadow: 0 0 0.7rem rgba(132, 178, 219, 0.14);
+  }
+  100% {
+    translate: 0 0;
+    letter-spacing: inherit;
+    filter: blur(0);
+    text-shadow: 0 0 0.25rem rgba(132, 178, 219, 0.05);
+  }
+}
+
+@keyframes memory-copy-converge-left {
+  0% { opacity: 0; translate: -0.24em 0.055em; filter: blur(0.75px); }
+  12% { opacity: 0.48; }
+  62% { opacity: 0.2; translate: -0.025em 0; filter: blur(0.15px); }
+  100% { opacity: 0; translate: 0 0; filter: blur(0); }
+}
+
+@keyframes memory-copy-converge-right {
+  0% { opacity: 0; translate: 0.31em -0.045em; filter: blur(1px); }
+  18% { opacity: 0.34; }
+  68% { opacity: 0.16; translate: 0.02em 0; filter: blur(0.12px); }
+  100% { opacity: 0; translate: 0 0; filter: blur(0); }
+}
+
+@keyframes memory-force-lock {
+  0% { translate: -0.1em 0; letter-spacing: 0.025em; filter: blur(0.35px); }
+  18% { translate: 0.13em -0.025em; }
+  34% { translate: -0.035em 0.015em; letter-spacing: -0.005em; }
+  48%, 100% { translate: 0 0; letter-spacing: inherit; filter: blur(0); }
+}
+
+@keyframes memory-copy-forced {
+  0% { opacity: 0.45; translate: -0.3em 0; filter: blur(0.7px); }
+  24% { opacity: 0.28; translate: 0.17em 0; }
+  42% { opacity: 0.2; translate: -0.045em 0; filter: blur(0.1px); }
+  58%, 100% { opacity: 0; translate: 0 0; filter: blur(0); }
+}
+
+@keyframes memory-copy-reject-left {
+  0% { opacity: 0; translate: 0 0; filter: blur(0); }
+  14% { opacity: 0.38; }
+  38% { opacity: 0.3; translate: -0.14em 0.035em; }
+  72% { opacity: 0.12; translate: -0.32em 0.08em; filter: blur(0.65px); }
+  100% { opacity: 0; translate: -0.4em 0.1em; filter: blur(1px); }
+}
+
+@keyframes memory-copy-reject-right {
+  0% { opacity: 0; translate: 0 0; filter: blur(0); }
+  18% { opacity: 0.3; }
+  42% { opacity: 0.24; translate: 0.12em -0.025em; }
+  75% { opacity: 0.1; translate: 0.28em -0.07em; filter: blur(0.6px); }
+  100% { opacity: 0; translate: 0.38em -0.1em; filter: blur(1px); }
+}
+
+@keyframes memory-partial-lock {
+  0% { translate: -0.055em 0; filter: blur(0.32px); }
+  21% { translate: 0.075em -0.02em; filter: blur(0); }
+  39% { translate: -0.025em 0.01em; }
+  58% { translate: 0.012em 0; }
+  100% { translate: 0 0; filter: blur(0); }
+}
+
+@keyframes memory-copy-remain-left {
+  0% { opacity: 0; translate: 0 0; }
+  17% { opacity: 0.34; translate: -0.12em 0.025em; }
+  48% { opacity: 0.2; translate: -0.18em 0.04em; }
+  100% { opacity: 0.08; translate: -0.14em 0.03em; filter: blur(0.3px); }
+}
+
+@keyframes memory-copy-remain-right {
+  0% { opacity: 0; translate: 0 0; }
+  21% { opacity: 0.26; translate: 0.15em -0.025em; }
+  56% { opacity: 0.17; translate: 0.21em -0.045em; }
+  100% { opacity: 0.07; translate: 0.16em -0.035em; filter: blur(0.35px); }
+}
+
+@keyframes memory-marker-fill {
+  0% { transform: scaleX(0); opacity: 0; filter: blur(1.2px); }
+  18% { opacity: 0.72; }
+  72% { transform: scaleX(1.025); opacity: 0.9; filter: blur(0.2px); }
+  100% { transform: scaleX(1); opacity: 0.78; filter: blur(0); }
+}
+
+@keyframes memory-marker-stroke {
+  0% { transform: scaleX(0); opacity: 0; }
+  24% { opacity: 0.82; }
+  82% { transform: scaleX(1.035); opacity: 0.92; }
+  100% { transform: scaleX(1); opacity: 0.72; }
+}
+
+@keyframes memory-marker-conflict-ink {
+  0%, 28% { color: inherit; text-shadow: inherit; }
+  62% { color: rgba(239, 217, 215, 0.98); text-shadow: 0 0 0.48rem rgba(151, 49, 54, 0.12); }
+  100% { color: rgba(235, 222, 220, 0.96); text-shadow: 0 0 0.18rem rgba(151, 49, 54, 0.06); }
+}
+
+@keyframes memory-word-uncertain {
+  0%, 16% {
+    opacity: 1;
+    filter: blur(0);
+    letter-spacing: inherit;
+    text-shadow: 0 0 transparent;
+  }
+  34% {
+    opacity: 0.62;
+    filter: blur(1.3px);
+    letter-spacing: 0.025em;
+    text-shadow: 0.06em 0 rgba(119, 159, 201, 0.2);
+  }
+  52% {
+    opacity: 0.88;
+    filter: blur(0.35px);
+    letter-spacing: -0.006em;
+  }
+  71% {
+    opacity: 0.55;
+    filter: blur(1px);
+    letter-spacing: 0.018em;
+  }
+  100% {
+    opacity: 0.82;
+    filter: blur(0.3px);
+    letter-spacing: inherit;
+    text-shadow: 0 0 0.35rem rgba(119, 159, 201, 0.08);
+  }
+}
+
+@keyframes memory-rewrite-erasure {
+  0%, 13% { opacity: 0; transform: scaleX(0) scaleY(0.82) translateX(-0.025em) rotate(-0.08deg); }
+  21% { opacity: 0.9; }
+  36% { opacity: 0.97; transform: scaleX(0.72) scaleY(1) translateX(0) rotate(-0.08deg); }
+  46% { opacity: 0.98; transform: scaleX(1.015) scaleY(1) translateX(0) rotate(0.035deg); }
+  59% { opacity: 0.9; transform: scaleX(0.998) scaleY(0.18) translateX(0.012em) rotate(-0.02deg); }
+  77% { opacity: 0.22; transform: scaleX(1) scaleY(0.09) translateX(0.035em) rotate(0); }
+  100% { opacity: 0; transform: scaleX(1) scaleY(0.05) translateX(0.055em); }
+}
+
+@keyframes memory-rewrite-original {
+  0%, 31% { opacity: 1; filter: blur(0); clip-path: inset(0); }
+  52% { opacity: 0.42; filter: blur(0.35px); clip-path: inset(0 0 0 78%); }
+  65%, 100% { opacity: 0; filter: blur(0.8px); clip-path: inset(0 0 0 100%); }
+}
+
+@keyframes memory-rewrite-replacement {
+  0%, 51% { opacity: 0; translate: 0.08em 0; filter: blur(0.8px); clip-path: inset(0 100% 0 0); }
+  72% { opacity: 0.9; translate: 0 0; filter: blur(0.12px); clip-path: inset(0); }
+  100% { opacity: 1; translate: 0 0; filter: blur(0); clip-path: inset(0); }
+}
+
+@keyframes memory-alternate-original {
+  0%, 19%, 40%, 58% { opacity: 1; translate: 0 0; filter: blur(0); }
+  20%, 39%, 59%, 79% { opacity: 0.16; translate: -0.035em 0.015em; filter: blur(0.45px); }
+  80%, 100% { opacity: 0.62; translate: -0.025em 0; filter: blur(0.12px); }
+}
+
+@keyframes memory-alternate-replacement {
+  0%, 19%, 40%, 58% { opacity: 0; translate: 0.045em -0.015em; filter: blur(0.55px); }
+  20%, 39%, 59%, 79% { opacity: 0.92; translate: 0 0; filter: blur(0); }
+  80%, 100% { opacity: 0.48; translate: 0.035em 0; filter: blur(0.18px); }
+}
+
+@keyframes memory-split-original {
+  0% { opacity: 1; translate: 0 0; }
+  34% { opacity: 0.92; translate: -0.035em 0.012em; }
+  100% { opacity: 0.76; translate: -0.055em 0.02em; text-shadow: -0.04em 0 rgba(126, 162, 200, 0.12); }
+}
+
+@keyframes memory-split-replacement {
+  0% { opacity: 0; translate: 0 0; filter: blur(0.55px); }
+  28% { opacity: 0.28; }
+  62% { opacity: 0.57; translate: 0.065em -0.018em; filter: blur(0.12px); }
+  100% { opacity: 0.54; translate: 0.085em -0.025em; filter: blur(0.2px); }
+}
+
+@keyframes pain-shoe-slip {
+  0% { translate: 0 0; }
+  32% { translate: 0.18em 0.04em; }
+  58% { translate: -0.05em 0; }
+  100% { translate: 0 0; }
+}
+
+@keyframes pain-knee-jolt {
+  0% { translate: 0 0; filter: blur(0); }
+  14% { translate: -0.07em 0.12em; filter: blur(0.22px); }
+  27% { translate: 0.035em -0.025em; }
+  48%, 100% { translate: 0 0; filter: blur(0); }
+}
+
+@keyframes pain-low-throb {
+  0%, 100% { scale: 1; color: inherit; text-shadow: 0 0 transparent; }
+  18% { scale: 1.006; color: rgba(221, 225, 234, 0.88); text-shadow: 0 0 0.75rem rgba(106, 128, 164, 0.16); }
+  42% { scale: 0.998; text-shadow: 0 0 0.28rem rgba(106, 128, 164, 0.07); }
+  68% { scale: 1.002; }
+}
+
+@keyframes pain-anchor-settle {
+  0% { letter-spacing: 0; filter: blur(0.18px); opacity: 0.76; }
+  38% { letter-spacing: 0.012em; filter: blur(0); opacity: 1; }
+  100% { letter-spacing: 0.004em; filter: blur(0); opacity: 1; }
+}
+
+@keyframes pain-background-constrict {
+  0%, 100% { filter: saturate(1) contrast(1) brightness(1); }
+  20% { filter: saturate(0.54) contrast(1.16) brightness(0.56); }
+  52% { filter: saturate(0.68) contrast(1.09) brightness(0.7); }
+}
+
+@keyframes fight-aftermath-flash {
+  0% {
+    opacity: 0;
+    background: rgba(221, 236, 247, 0);
+    box-shadow: inset 0 0 0 rgba(220, 238, 255, 0);
+  }
+  5% {
+    opacity: 0.94;
+    background: rgba(226, 239, 248, 0.92);
+    box-shadow: inset 0 0 10rem rgba(209, 232, 250, 0.78);
+  }
+  13% {
+    opacity: 0.18;
+    background: rgba(180, 210, 231, 0.14);
+  }
+  19% {
+    opacity: 0.66;
+    background: rgba(216, 231, 242, 0.52);
+  }
+  31% {
+    opacity: 0.08;
+    background: rgba(179, 206, 225, 0.06);
+  }
+  100% {
+    opacity: 0;
+    background: rgba(5, 8, 17, 0);
+    box-shadow: inset 0 0 15rem rgba(2, 5, 12, 0.92);
+  }
+}
+
+@keyframes fight-aftermath-text {
+  0%, 100% {
+    filter: brightness(1);
+    text-shadow: none;
+  }
+  6% {
+    filter: brightness(1.62);
+    text-shadow: 0 0 18px rgba(221, 238, 250, 0.34);
+  }
+  22% {
+    filter: brightness(0.84);
+    text-shadow: 0 0 6px rgba(190, 214, 234, 0.08);
+  }
+}
+
+@keyframes fight-temple-pain-flash {
+  0% {
+    opacity: 0;
+    background: rgba(180, 210, 236, 0);
+    box-shadow: inset 0 0 0 rgba(150, 193, 232, 0);
+  }
+  12% {
+    opacity: 0.72;
+    background: radial-gradient(circle at 9% 22%, rgba(201, 232, 255, 0.88) 0 14%, rgba(77, 124, 169, 0.22) 38%, rgba(5, 9, 18, 0.08) 64%);
+    box-shadow: inset 0 0 11rem rgba(168, 210, 245, 0.42);
+  }
+  24% {
+    opacity: 0.18;
+    background: radial-gradient(circle at 10% 23%, rgba(180, 214, 240, 0.28) 0 10%, rgba(8, 13, 24, 0.04) 52%);
+  }
+  41% {
+    opacity: 0.46;
+    background: radial-gradient(circle at 10% 22%, rgba(197, 228, 248, 0.52) 0 11%, rgba(71, 118, 162, 0.12) 46%, rgba(5, 8, 16, 0.05) 70%);
+  }
+  100% {
+    opacity: 0;
+    background: rgba(4, 7, 13, 0);
+    box-shadow: inset 0 0 16rem rgba(1, 4, 9, 0.88);
+  }
+}
+
+@keyframes fight-temple-pain-video {
+  0%,
+  100% {
+    filter: saturate(0.92) brightness(0.58) contrast(1.08);
+    transform: translateX(0);
+  }
+  15% {
+    filter: saturate(0.58) brightness(0.82) contrast(1.16);
+    transform: translateX(-0.8px);
+  }
+  38% {
+    filter: saturate(0.76) brightness(0.66) contrast(1.12);
+    transform: translateX(0.45px);
+  }
+}
+
+@keyframes fight-temple-pain-text {
+  0%,
+  100% {
+    transform: translateX(0);
+    filter: none;
+    text-shadow: none;
+  }
+  14% {
+    transform: translateX(-1.2px);
+    filter: blur(0.25px);
+    text-shadow: 0 0 0.95rem rgba(196, 226, 247, 0.3);
+  }
+  33% {
+    transform: translateX(0.4px);
+    filter: none;
+    text-shadow: 0 0 0.55rem rgba(152, 196, 236, 0.2);
+  }
+}
+
+@keyframes fight-impact-blackout {
+  0% { opacity: 0; }
+  3% { opacity: 1; }
+  27% { opacity: 1; }
+  39% { opacity: 0.84; }
+  47% { opacity: 0.96; }
+  61% { opacity: 0.58; }
+  76% { opacity: 0.22; }
+  100% { opacity: 0; }
+}
+
+@keyframes fight-impact-disorientation {
+  0%, 28% {
+    transform: translate(0);
+    filter: blur(0);
+  }
+  42% {
+    transform: translate(-1.2px, 0.6px);
+    filter: blur(1.1px);
+  }
+  57% {
+    transform: translate(0.7px, -0.25px);
+    filter: blur(0.55px);
+  }
+  100% {
+    transform: translate(0);
+    filter: blur(0);
+  }
+}
+
+/* The city recollection gently loses typographic stability. Motion grows over
+   the opening lines, occasionally slips by a fraction of a pixel, and settles
+   again before the memory releases the page. */
+.fx-memory-drift {
+  --memory-drift-x: 0.7px;
+  --memory-drift-y: 0.55px;
+  --memory-glitch-x: 1px;
+  --memory-glitch-skew: 0.035deg;
+  --memory-glitch-blue: rgba(92, 184, 232, 0.09);
+  --memory-glitch-warm: rgba(197, 112, 126, 0.045);
+}
+
+.fx-memory-drift[data-text-drift='enter-1'] {
+  --memory-drift-x: 0.1px;
+  --memory-drift-y: 0.08px;
+  --memory-glitch-x: 0.12px;
+  --memory-glitch-skew: 0.005deg;
+}
+
+.fx-memory-drift[data-text-drift='enter-2'] {
+  --memory-drift-x: 0.22px;
+  --memory-drift-y: 0.16px;
+  --memory-glitch-x: 0.3px;
+  --memory-glitch-skew: 0.012deg;
+}
+
+.fx-memory-drift[data-text-drift='enter-3'] {
+  --memory-drift-x: 0.38px;
+  --memory-drift-y: 0.28px;
+  --memory-glitch-x: 0.52px;
+  --memory-glitch-skew: 0.02deg;
+}
+
+.fx-memory-drift[data-text-drift='enter-4'] {
+  --memory-drift-x: 0.55px;
+  --memory-drift-y: 0.42px;
+  --memory-glitch-x: 0.75px;
+  --memory-glitch-skew: 0.028deg;
+}
+
+.fx-memory-drift[data-text-drift='unstable'] {
+  --memory-drift-x: 0.82px;
+  --memory-drift-y: 0.64px;
+  --memory-glitch-x: 1.25px;
+  --memory-glitch-skew: 0.05deg;
+  --memory-glitch-blue: rgba(92, 184, 232, 0.12);
+  --memory-glitch-warm: rgba(197, 112, 126, 0.06);
+}
+
+.fx-memory-drift[data-text-drift='settle-1'] {
+  --memory-drift-x: 0.42px;
+  --memory-drift-y: 0.3px;
+  --memory-glitch-x: 0.48px;
+  --memory-glitch-skew: 0.018deg;
+}
+
+.fx-memory-drift[data-text-drift='settle-2'] {
+  --memory-drift-x: 0.22px;
+  --memory-drift-y: 0.14px;
+  --memory-glitch-x: 0.25px;
+  --memory-glitch-skew: 0.009deg;
+}
+
+.fx-memory-drift[data-text-drift='settle-3'] {
+  --memory-drift-x: 0.08px;
+  --memory-drift-y: 0.05px;
+  --memory-glitch-x: 0.08px;
+  --memory-glitch-skew: 0.003deg;
+}
+
+.fx-memory-drift .prose,
+.fx-memory-drift .choices {
+  transform-origin: 48% 50%;
+  animation: city-text-drift 17s ease-in-out infinite;
+  will-change: transform;
+}
+
+.fx-memory-drift .choices {
+  animation-delay: -5.7s;
+  animation-duration: 19s;
+}
+
+.fx-memory-drift-exit .prose,
+.fx-memory-drift-exit .choices {
+  animation: city-text-settle 2200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fx-memory-lock .line[data-line-id^='bar_memory_break_'],
+.fx-memory-lock .line[data-line-id='bar_unknown_01'] {
+  transition:
+    color 1100ms ease,
+    opacity 1100ms ease,
+    text-shadow 1400ms ease,
+    transform 1400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fx-memory-lock .line[data-line-id^='bar_memory_break_'].layer-narration {
+  color: rgba(218, 228, 239, 0.9);
+}
+
+.fx-memory-lock .line[data-line-id^='bar_memory_break_'].layer-thought {
+  color: rgba(184, 207, 231, 0.94);
+  border-left-color: rgba(100, 155, 204, 0.35);
+  text-shadow: 0 0 13px rgba(97, 165, 224, 0.09);
+}
+
+.fx-memory-lock .line[data-line-id='bar_memory_break_17'],
+.fx-memory-lock .line[data-line-id='bar_memory_break_24'] {
+  color: rgba(183, 211, 238, 0.92);
+  text-shadow:
+    0 0 14px rgba(85, 161, 224, 0.16),
+    0 0 32px rgba(70, 131, 195, 0.07);
+}
+
+.fx-memory-lock .dialogue[data-line-id='bar_memory_break_21'] .dialogue__speaker {
+  opacity: 0.4;
+  transform: translateX(-1.1rem);
+  color: rgba(139, 174, 207, 0.7);
+}
+
+.fx-memory-lock .dialogue[data-line-id='bar_memory_break_21'] .dialogue__text {
+  color: rgba(209, 224, 239, 0.84);
+  text-shadow: -12px 0 18px rgba(91, 154, 213, 0.14);
+}
+
+.fx-memory-lock .dialogue[data-line-id='bar_memory_break_25'] .dialogue__speaker {
+  opacity: 0.68;
+  transform: translateX(0.45rem);
+  color: rgba(159, 187, 216, 0.78);
+}
+
+.fx-memory-lock .dialogue[data-line-id='bar_memory_break_25'] .dialogue__text {
+  color: rgba(223, 233, 243, 0.92);
+  text-shadow: 9px 0 16px rgba(96, 157, 211, 0.11);
+}
+
+.fx-memory-lock .line[data-line-id='bar_unknown_01'] {
+  color: rgba(184, 207, 230, 0.72);
+  letter-spacing: 0.018em;
+  text-shadow: 0 0 18px rgba(99, 162, 218, 0.12);
+}
+
+@keyframes reveal {
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes fight-type-afterimage {
+  0%, 100% {
+    letter-spacing: inherit;
+    text-shadow: 0 0 0 transparent;
+  }
+  22% {
+    letter-spacing: 0.028em;
+    text-shadow: -0.08em 0 rgba(105, 145, 188, 0.18), 0.07em 0 rgba(151, 102, 92, 0.1);
+  }
+  34% {
+    letter-spacing: 0.004em;
+    text-shadow: 0.03em 0 rgba(105, 145, 188, 0.1);
+  }
+}
+
+@keyframes fight-type-unease {
+  0%, 100% { text-shadow: 0 0 0 transparent; }
+  35% { text-shadow: 0 0 0.65rem rgba(116, 151, 192, 0.16); }
+  48% { text-shadow: 0.035em 0 rgba(116, 151, 192, 0.12); }
+}
+
+@keyframes fight-type-terminal {
+  0% { letter-spacing: 0.012em; text-shadow: 0 0 1.2rem rgba(117, 151, 188, 0.24); }
+  55% { letter-spacing: 0.055em; }
+  100% { letter-spacing: 0.035em; text-shadow: 0 0 0 transparent; }
+}
+
+@keyframes memory-line-float-low {
+  from { translate: -0.2px 0.25px; rotate: -0.025deg; }
+  to { translate: 0.35px -0.3px; rotate: 0.035deg; }
+}
+
+@keyframes memory-line-float-mid {
+  0% { translate: -0.7px 0.5px; rotate: -0.07deg; }
+  48% { translate: 0.8px -0.65px; rotate: 0.09deg; }
+  52% { translate: -0.15px -0.4px; rotate: -0.02deg; }
+  100% { translate: 0.55px 0.85px; rotate: 0.055deg; }
+}
+
+@keyframes memory-line-float-critical {
+  0% { translate: -2.8px 1.6px; rotate: -0.24deg; text-shadow: 0 0 transparent; }
+  34% { translate: 3.2px -2.1px; rotate: 0.3deg; text-shadow: 0 0 transparent; }
+  37% { translate: -2.2px -0.8px; rotate: -0.18deg; text-shadow: 0.09em 0 rgba(111, 151, 194, 0.2); }
+  41% { translate: 1.1px 0.45px; rotate: 0.08deg; text-shadow: -0.05em 0 rgba(172, 105, 98, 0.11); }
+  72% { translate: -1.8px 2.5px; rotate: -0.16deg; text-shadow: 0 0 transparent; }
+  100% { translate: 2.4px 2.8px; rotate: 0.22deg; text-shadow: 0 0 transparent; }
+}
+
+@keyframes probability-text-split {
+  0% { translate: -2px 1px; rotate: -0.14deg; filter: blur(0); }
+  24% { translate: 3px -1.8px; rotate: 0.22deg; filter: blur(0); }
+  27% { translate: -5px -0.4px; rotate: -0.32deg; filter: blur(0.35px); }
+  30% { translate: 1px 0.8px; rotate: 0.08deg; filter: blur(0); }
+  62% { translate: -2.8px 2.2px; rotate: -0.2deg; filter: blur(0); }
+  66% { translate: 4.5px -1px; rotate: 0.28deg; filter: blur(0.25px); }
+  69% { translate: -0.7px 0; rotate: -0.04deg; filter: blur(0); }
+  100% { translate: 2.6px 2.4px; rotate: 0.18deg; filter: blur(0); }
+}
+
+@keyframes probability-title-break {
+  0%, 44%, 54%, 100% { translate: 0 0; letter-spacing: 0.08em; opacity: 1; }
+  45% { translate: -0.12em 0; letter-spacing: 0.115em; opacity: 0.72; }
+  47% { translate: 0.08em -0.02em; letter-spacing: 0.065em; opacity: 1; }
+  51% { translate: -0.03em 0.02em; letter-spacing: 0.1em; opacity: 0.86; }
+}
+
+@keyframes shuttle-text-rumble {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  8% { transform: translate3d(-0.35px, 0.2px, 0); }
+  13% { transform: translate3d(0.55px, -0.25px, 0); }
+  19% { transform: translate3d(-0.7px, 0.28px, 0); }
+  27% { transform: translate3d(0.48px, -0.18px, 0); }
+  36% { transform: translate3d(-0.42px, 0.16px, 0); }
+  47% { transform: translate3d(0.32px, -0.12px, 0); }
+  61% { transform: translate3d(-0.2px, 0.08px, 0); }
+  78% { transform: translate3d(0.1px, -0.04px, 0); }
+}
+
+@keyframes city-text-drift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) skewX(0);
+    text-shadow: 0 0 0 transparent;
+  }
+  18% {
+    transform: translate3d(var(--memory-drift-x), calc(var(--memory-drift-y) * -1), 0)
+      skewX(var(--memory-glitch-skew));
+  }
+  42% {
+    transform: translate3d(calc(var(--memory-drift-x) * -0.7), var(--memory-drift-y), 0)
+      skewX(calc(var(--memory-glitch-skew) * -0.6));
+  }
+  46.8% {
+    transform: translate3d(calc(var(--memory-glitch-x) * -1), 0, 0)
+      skewX(calc(var(--memory-glitch-skew) * -1));
+    text-shadow:
+      var(--memory-glitch-x) 0 var(--memory-glitch-blue),
+      calc(var(--memory-glitch-x) * -0.55) 0 var(--memory-glitch-warm);
+  }
+  47.35% {
+    transform: translate3d(calc(var(--memory-glitch-x) * 0.45), 0, 0)
+      skewX(var(--memory-glitch-skew));
+    text-shadow: 0 0 0 transparent;
+  }
+  48.2% {
+    transform: translate3d(calc(var(--memory-drift-x) * -0.45), var(--memory-drift-y), 0)
+      skewX(0);
+  }
+  72% {
+    transform: translate3d(calc(var(--memory-drift-x) * 0.5), calc(var(--memory-drift-y) * 0.35), 0)
+      skewX(calc(var(--memory-glitch-skew) * 0.25));
+  }
+  88% {
+    transform: translate3d(calc(var(--memory-drift-x) * -0.2), calc(var(--memory-drift-y) * -0.65), 0)
+      skewX(0);
+  }
+}
+
+@keyframes city-text-settle {
+  from { transform: translate3d(0.2px, -0.12px, 0); }
+  to { transform: translate3d(0, 0, 0); text-shadow: 0 0 0 transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell[data-chapter='2']
+    .line[data-line-id^='fight_collapse_'] > :is(.line__text, .dialogue__text),
+  .app-shell[data-chapter='2'] .line[data-line-id='fight_collapse_title'] > .line__text,
+  .app-shell[data-chapter='2'][data-memory-erosion]
+    .line > :is(.line__text, .dialogue__text),
+  .app-shell[data-chapter='2'] .line[data-line-id='fight_first_mismatch_02'],
+  .app-shell[data-chapter='2'] .line[data-line-id='fight_stance_fracture_02'],
+  .app-shell[data-chapter='2'] .line[data-line-id='fight_stance_fracture_03'],
+  .app-shell[data-chapter='2'] .line[data-line-id$='_unease'],
+  .app-shell[data-chapter='2'] .line[data-line-id='fight_unsupported_title'],
+  .app-shell[data-chapter='2'] .line[data-line-id='fight_collapse_title'],
+  .app-shell[data-chapter='2'] .line[data-line-id='fight_perfect_title'],
+  .app-shell[data-chapter='2'] .line[data-line-id^='fight_response_0'] > .line__text,
+  .app-shell[data-chapter='2'] .line[data-memory-cue] > :is(.line__text, .dialogue__text),
+  .app-shell[data-chapter='2'] .line[data-visual-effect] > :is(.line__text, .dialogue__text),
+  .fx-shuttle-rumble .narrative-panel,
+  .fx-memory-drift .prose,
+  .fx-memory-drift .choices,
+  .fx-memory-drift-exit .prose,
+  .fx-memory-drift-exit .choices,
+  .app-shell[data-chapter='2'][data-visual-effect] .narrative-panel,
+  .app-shell[data-chapter='2'][data-memory-cue] .narrative-panel,
+  .app-shell[data-chapter='2'][data-visual-effect] .chapter-fight-background__video,
+  .app-shell[data-chapter='2'][data-memory-cue] .chapter-fight-background__video {
+    animation: none;
+  }
+
+  .app-shell[data-chapter='2'].fx-probability-pull
+    .chapter-fight-background__video {
+    animation: none;
+    transform: scale(1.015);
+  }
+
+  .app-shell[data-chapter='2']
+    .line:is([data-memory-cue], [data-visual-effect]) > :is(.line__text, .dialogue__text)::before,
+  .app-shell[data-chapter='2']
+    .line:is([data-memory-cue], [data-visual-effect]) > :is(.line__text, .dialogue__text)::after {
+    display: none;
+  }
+
+  .memory-mark,
+  .memory-mark::before,
+  .memory-mark::after,
+  .memory-mutation,
+  .memory-mutation::after,
+  .memory-mutation__original,
+  .memory-mutation__replacement {
+    animation: none;
+  }
+
+  .memory-mark--conflict::before,
+  .memory-mark--conflict::after {
+    opacity: 0.6;
+    transform: scaleX(1);
+  }
+
+  .memory-mutation--rewrite .memory-mutation__original {
+    opacity: 0;
+  }
+
+  .memory-mutation--rewrite .memory-mutation__replacement,
+  .memory-mutation--alternate .memory-mutation__original,
+  .memory-mutation--alternate .memory-mutation__replacement,
+  .memory-mutation--split-word .memory-mutation__original,
+  .memory-mutation--split-word .memory-mutation__replacement {
+    opacity: 0.75;
+  }
+
+  .app-shell[data-chapter='2'][data-visual-effect='fight_aftermath_flash']
+    .chapter-fight-background::after,
+  .app-shell[data-chapter='2'][data-visual-effect='memory_return_flash']
+    .chapter-fight-background::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  .app-shell[data-chapter='2'][data-visual-effect='impact_blackout']::after {
+    animation: none;
+    opacity: 0;
+  }
+}
