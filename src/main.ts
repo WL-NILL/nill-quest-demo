@@ -408,7 +408,7 @@ appRoot.innerHTML = `
           </div>
           <div class="notebook-future__entry">
             <span class="notebook-entry__roman">Глава V</span>
-            <span class="notebook-future__title">МАЯК и его версия</span>
+            <span class="notebook-future__title">МАЯК-01</span>
             <span class="notebook-future__status">в разработке</span>
           </div>
         </section>
