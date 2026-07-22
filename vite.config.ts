@@ -50,6 +50,7 @@ function watchInkPlugin(): Plugin {
 }
 
 export default defineConfig({
+  base: process.env.NILL_PUBLIC_BASE || '/',
   plugins: [watchInkPlugin()],
   server: {
     host: '0.0.0.0',

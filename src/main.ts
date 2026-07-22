@@ -437,11 +437,11 @@ appRoot.innerHTML = `
       <div class="bg-grain"></div>
       <div class="archive-field" aria-hidden="true">
         <video class="archive-video" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload noremoteplayback nofullscreen" tabindex="-1">
-          <source src="/video/city-archive.mp4" type="video/mp4">
+          <source src="video/city-archive.mp4" type="video/mp4">
         </video>
         <video class="archive-neon-video" muted playsinline preload="none" aria-hidden="true" disablepictureinpicture disableremoteplayback controlslist="nodownload noremoteplayback nofullscreen" tabindex="-1">
-          <source src="/video/city-neon-overlay.webm" type="video/webm">
-          <source src="/video/city-neon-overlay.mp4" type="video/mp4">
+          <source src="video/city-neon-overlay.webm" type="video/webm">
+          <source src="video/city-neon-overlay.mp4" type="video/mp4">
         </video>
         <div class="archive-spectrum"></div>
         <div class="archive-lattice"></div>
@@ -453,7 +453,7 @@ appRoot.innerHTML = `
 
     <div class="chapter-fight-background" aria-hidden="true">
       <video class="chapter-fight-background__video" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload noremoteplayback nofullscreen" tabindex="-1">
-        <source src="/video/chapter-02-chaos.mp4" type="video/mp4">
+        <source src="video/chapter-02-chaos.mp4" type="video/mp4">
       </video>
     </div>
 
@@ -487,8 +487,8 @@ appRoot.innerHTML = `
   <div class="screen-transition" id="screen-transition" aria-hidden="true">
     <div class="screen-transition__media screen-transition__media--fracture" aria-hidden="true">
       <video muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload noremoteplayback nofullscreen" tabindex="-1" data-transition-media="fracture">
-        <source src="/video/chapter-02-hyperbolic.webm" type="video/webm">
-        <source src="/video/chapter-02-hyperbolic.mp4" type="video/mp4">
+        <source src="video/chapter-02-hyperbolic.webm" type="video/webm">
+        <source src="video/chapter-02-hyperbolic.mp4" type="video/mp4">
       </video>
     </div>
     <div class="screen-transition__veil" aria-hidden="true"></div>
