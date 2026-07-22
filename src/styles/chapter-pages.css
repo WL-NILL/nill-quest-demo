@@ -84,7 +84,11 @@
 
 .chapter-menu-page:has(.notebook-entry--one:is(:hover, :focus-visible))
   .notebook-ambience--chapter-one,
+.chapter-menu-page:has(.notebook-restart--one:is(:hover, :focus-visible))
+  .notebook-ambience--chapter-one,
 .chapter-menu-page:has(.notebook-entry--two:not(:disabled):is(:hover, :focus-visible))
+  .notebook-ambience--chapter-two,
+.chapter-menu-page:has(.notebook-restart--two:is(:hover, :focus-visible))
   .notebook-ambience--chapter-two {
   opacity: 1;
   transform: scale(1);
@@ -305,6 +309,34 @@
 .notebook-entry--two:focus-visible {
   outline: 1px solid rgba(142, 170, 200, 0.22);
   outline-offset: 0.75rem;
+}
+
+.notebook-restart {
+  display: block;
+  margin-top: 0.65rem;
+  border: 0;
+  padding: 0.18rem 0;
+  background: transparent;
+  color: rgba(154, 162, 174, 0.34);
+  font: 500 0.64rem/1.35 'Manrope', sans-serif;
+  letter-spacing: 0.07em;
+  text-transform: lowercase;
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+
+.notebook-restart--two {
+  margin-left: clamp(0.2rem, 1vw, 0.65rem);
+}
+
+.notebook-restart:hover,
+.notebook-restart:focus-visible {
+  color: rgba(185, 199, 216, 0.68);
+  outline: none;
+}
+
+.notebook-restart[hidden] {
+  display: none;
 }
 
 .notebook-entry--two .notebook-entry__title {
@@ -568,18 +600,17 @@
 }
 
 .chapter-replay-dialog {
-  width: min(calc(100vw - 2rem), 29rem);
+  width: min(calc(100vw - 2rem), 27rem);
   margin: auto;
-  border: 1px solid rgba(139, 157, 180, 0.18);
+  border: 0;
   padding: 0;
-  background: rgba(10, 13, 18, 0.98);
+  background: rgba(7, 9, 13, 0.98);
   color: rgba(232, 231, 228, 0.92);
-  box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.58);
+  box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.54);
 }
 
 .chapter-replay-dialog::backdrop {
-  background: rgba(2, 4, 8, 0.76);
-  backdrop-filter: blur(3px);
+  background: rgba(2, 4, 8, 0.8);
 }
 
 .chapter-replay-dialog[open] {
@@ -587,16 +618,7 @@
 }
 
 .chapter-replay-dialog__body {
-  padding: 1.55rem 1.65rem 1.4rem;
-}
-
-.chapter-replay-dialog__eyebrow {
-  display: block;
-  margin-bottom: 0.8rem;
-  color: rgba(137, 158, 184, 0.52);
-  font: 500 0.64rem/1.2 'Manrope', sans-serif;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
+  padding: 1.6rem 1.7rem 1.45rem;
 }
 
 .chapter-replay-dialog h2 {
@@ -614,31 +636,29 @@
 .chapter-replay-dialog__actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.6rem;
-  margin-top: 1.5rem;
+  gap: 1.15rem;
+  margin-top: 1.65rem;
 }
 
 .chapter-replay-dialog__actions button {
-  border: 1px solid rgba(137, 158, 184, 0.16);
-  padding: 0.62rem 0.85rem;
-  background: rgba(255, 255, 255, 0.025);
+  border: 0;
+  padding: 0.35rem 0;
+  background: transparent;
   color: rgba(190, 198, 208, 0.7);
   font: 500 0.68rem/1.2 'Manrope', sans-serif;
   letter-spacing: 0.04em;
   cursor: pointer;
-  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+  transition: color 180ms ease;
 }
 
 .chapter-replay-dialog__actions button:last-child {
-  border-color: rgba(155, 179, 209, 0.28);
   color: rgba(218, 227, 238, 0.9);
 }
 
 .chapter-replay-dialog__actions button:hover,
 .chapter-replay-dialog__actions button:focus-visible {
-  border-color: rgba(160, 183, 211, 0.48);
-  background: rgba(130, 157, 190, 0.09);
   color: rgba(239, 243, 248, 0.96);
+  outline: none;
 }
 
 @keyframes chapter-replay-enter {

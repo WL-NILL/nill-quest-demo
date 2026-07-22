@@ -71,10 +71,12 @@ type AppElements = {
   chapterOneLoreSecondary: HTMLElement;
   chapterOneLoreTertiary: HTMLElement;
   chapterOneAction: HTMLElement;
+  chapterOneRestart: HTMLButtonElement;
   chapterTwoOpenNote: HTMLElement;
   chapterTwoIncomplete: HTMLElement;
   chapterTwoSummary: HTMLElement;
   chapterTwoAction: HTMLElement;
+  chapterTwoRestart: HTMLButtonElement;
   futureChapters: HTMLElement;
   replayDialog: HTMLDialogElement;
   replayDialogTitle: HTMLElement;
@@ -377,6 +379,9 @@ appRoot.innerHTML = `
           </span>
           <span class="notebook-action notebook-reveal notebook-reveal--action" id="chapter-one-action">начать</span>
         </button>
+        <button class="notebook-restart notebook-restart--one" id="chapter-one-restart" type="button" hidden>
+          переиграть
+        </button>
 
         <button class="notebook-entry notebook-entry--two" id="chapter-two-button" type="button" hidden>
           <span class="notebook-entry__roman notebook-reveal--chapter-two-label">Глава II</span>
@@ -390,6 +395,9 @@ appRoot.innerHTML = `
             Нилл возвращается к воспоминанию о драке и пытается восстановить, кто начал её первым.
           </span>
           <span class="notebook-action notebook-reveal--chapter-two-action" id="chapter-two-action">вспомнить</span>
+        </button>
+        <button class="notebook-restart notebook-restart--two" id="chapter-two-restart" type="button" hidden>
+          переиграть
         </button>
 
         <section class="notebook-future" id="notebook-future" aria-label="Будущие записи" hidden>
@@ -415,12 +423,11 @@ appRoot.innerHTML = `
 
   <dialog class="chapter-replay-dialog" id="chapter-replay-dialog" aria-labelledby="chapter-replay-title" aria-describedby="chapter-replay-message">
     <div class="chapter-replay-dialog__body">
-      <span class="chapter-replay-dialog__eyebrow">Записи</span>
       <h2 id="chapter-replay-title">Переиграть главу?</h2>
       <p id="chapter-replay-message"></p>
       <div class="chapter-replay-dialog__actions">
         <button type="button" id="chapter-replay-cancel">Отмена</button>
-        <button type="button" id="chapter-replay-confirm">Начать сначала</button>
+        <button type="button" id="chapter-replay-confirm">Переиграть</button>
       </div>
     </div>
   </dialog>
@@ -500,10 +507,12 @@ const elements: AppElements = {
   chapterOneLoreSecondary: queryOrThrow<HTMLElement>('#chapter-one-lore-secondary'),
   chapterOneLoreTertiary: queryOrThrow<HTMLElement>('#chapter-one-lore-tertiary'),
   chapterOneAction: queryOrThrow<HTMLElement>('#chapter-one-action'),
+  chapterOneRestart: queryOrThrow<HTMLButtonElement>('#chapter-one-restart'),
   chapterTwoOpenNote: queryOrThrow<HTMLElement>('#chapter-two-open-note'),
   chapterTwoIncomplete: queryOrThrow<HTMLElement>('#chapter-two-incomplete'),
   chapterTwoSummary: queryOrThrow<HTMLElement>('#chapter-two-summary'),
   chapterTwoAction: queryOrThrow<HTMLElement>('#chapter-two-action'),
+  chapterTwoRestart: queryOrThrow<HTMLButtonElement>('#chapter-two-restart'),
   futureChapters: queryOrThrow<HTMLElement>('#notebook-future'),
   replayDialog: queryOrThrow<HTMLDialogElement>('#chapter-replay-dialog'),
   replayDialogTitle: queryOrThrow<HTMLElement>('#chapter-replay-title'),
@@ -703,6 +712,7 @@ async function boot(): Promise<void> {
       : chapterOneStarted
         ? 'продолжить'
         : 'начать';
+    elements.chapterOneRestart.hidden = !chapterOneStarted || chapterOneCompleted;
 
     if (debugNotebookMode === 'normal') {
       delete elements.chapterMenu.dataset.notebookMode;
@@ -822,6 +832,8 @@ async function boot(): Promise<void> {
       : chapterTwoStarted
         ? 'продолжить'
         : 'вспомнить';
+    elements.chapterTwoRestart.hidden =
+      !chapterTwoUnlocked || !chapterTwoStarted || chapterTwoCompleted;
     elements.futureChapters.hidden = !chapterTwoCompleted;
     syncChapterDebug();
   };
@@ -1765,9 +1777,8 @@ async function boot(): Promise<void> {
   const openReplayDialog = (chapter: 1 | 2): void => {
     replayChapterPending = chapter;
     elements.replayDialogTitle.textContent = `Переиграть главу ${chapter === 1 ? 'I' : 'II'}?`;
-    elements.replayDialogMessage.textContent = chapter === 1
-      ? 'Глава начнётся сначала. Прогресс главы II и сохранённые в ней ответы будут удалены.'
-      : 'Глава начнётся сначала. Её текущая версия и прогресс следующих глав будут удалены.';
+    elements.replayDialogMessage.textContent =
+      'Если переиграть эту главу, следующие главы потеряют прогресс и снова станут недоступны.';
     if (!elements.replayDialog.open) {
       elements.replayDialog.showModal();
     }
@@ -1916,6 +1927,9 @@ async function boot(): Promise<void> {
     replayChapterPending = null;
     elements.replayDialog.close();
   });
+
+  elements.chapterOneRestart.addEventListener('click', () => openReplayDialog(1));
+  elements.chapterTwoRestart.addEventListener('click', () => openReplayDialog(2));
 
   elements.chapterOneButton.addEventListener('click', () => {
     if (chapterProgress.completedChapters.includes(1)) {
