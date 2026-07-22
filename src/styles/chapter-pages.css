@@ -567,6 +567,91 @@
   right: -10%;
 }
 
+.chapter-replay-dialog {
+  width: min(calc(100vw - 2rem), 29rem);
+  margin: auto;
+  border: 1px solid rgba(139, 157, 180, 0.18);
+  padding: 0;
+  background: rgba(10, 13, 18, 0.98);
+  color: rgba(232, 231, 228, 0.92);
+  box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.58);
+}
+
+.chapter-replay-dialog::backdrop {
+  background: rgba(2, 4, 8, 0.76);
+  backdrop-filter: blur(3px);
+}
+
+.chapter-replay-dialog[open] {
+  animation: chapter-replay-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.chapter-replay-dialog__body {
+  padding: 1.55rem 1.65rem 1.4rem;
+}
+
+.chapter-replay-dialog__eyebrow {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: rgba(137, 158, 184, 0.52);
+  font: 500 0.64rem/1.2 'Manrope', sans-serif;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.chapter-replay-dialog h2 {
+  margin: 0;
+  color: rgba(240, 237, 232, 0.94);
+  font: 400 1.24rem/1.35 'Literata', 'PT Serif', Georgia, serif;
+}
+
+.chapter-replay-dialog p {
+  margin: 0.85rem 0 0;
+  color: rgba(189, 194, 201, 0.72);
+  font: 400 0.9rem/1.6 'Literata', 'PT Serif', Georgia, serif;
+}
+
+.chapter-replay-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}
+
+.chapter-replay-dialog__actions button {
+  border: 1px solid rgba(137, 158, 184, 0.16);
+  padding: 0.62rem 0.85rem;
+  background: rgba(255, 255, 255, 0.025);
+  color: rgba(190, 198, 208, 0.7);
+  font: 500 0.68rem/1.2 'Manrope', sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+.chapter-replay-dialog__actions button:last-child {
+  border-color: rgba(155, 179, 209, 0.28);
+  color: rgba(218, 227, 238, 0.9);
+}
+
+.chapter-replay-dialog__actions button:hover,
+.chapter-replay-dialog__actions button:focus-visible {
+  border-color: rgba(160, 183, 211, 0.48);
+  background: rgba(130, 157, 190, 0.09);
+  color: rgba(239, 243, 248, 0.96);
+}
+
+@keyframes chapter-replay-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.55rem) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @media (max-width: 620px) {
   .chapter-page {
     overflow-y: auto;
@@ -620,6 +705,19 @@
   .chapter-menu-page.is-entering .notebook-reveal--chapter-two-title { animation-delay: 590ms; }
   .chapter-menu-page.is-entering .notebook-reveal--chapter-two-note { animation-delay: 660ms; }
   .chapter-menu-page.is-entering .notebook-reveal--chapter-two-action { animation-delay: 730ms; }
+
+  .chapter-replay-dialog__body {
+    padding: 1.35rem 1.15rem 1.15rem;
+  }
+
+  .chapter-replay-dialog__actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .chapter-replay-dialog__actions button {
+    min-height: 2.75rem;
+  }
 }
 
 @media (max-height: 520px) and (orientation: landscape) {
@@ -640,6 +738,10 @@
   .chapter-menu-page.is-entering .notebook-reveal,
   .chapter-menu-page.is-entering .notebook-entry--two > *,
   .chapter-menu-page.is-entering .notebook-future__entry {
+    animation: none;
+  }
+
+  .chapter-replay-dialog[open] {
     animation: none;
   }
 }

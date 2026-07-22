@@ -76,6 +76,11 @@ type AppElements = {
   chapterTwoSummary: HTMLElement;
   chapterTwoAction: HTMLElement;
   futureChapters: HTMLElement;
+  replayDialog: HTMLDialogElement;
+  replayDialogTitle: HTMLElement;
+  replayDialogMessage: HTMLElement;
+  replayDialogCancel: HTMLButtonElement;
+  replayDialogConfirm: HTMLButtonElement;
   chapterTwoVideos: HTMLVideoElement[];
   sceneHeading: HTMLElement;
   storyDebug: HTMLElement;
@@ -393,23 +398,35 @@ appRoot.innerHTML = `
         <section class="notebook-future" id="notebook-future" aria-label="Будущие записи" hidden>
           <div class="notebook-future__entry">
             <span class="notebook-entry__roman">Глава III</span>
-            <span class="notebook-future__title">Чужой маршрут</span>
+            <span class="notebook-future__title">Прямая дорога, движение</span>
             <span class="notebook-future__status">в разработке</span>
           </div>
           <div class="notebook-future__entry">
             <span class="notebook-entry__roman">Глава IV</span>
-            <span class="notebook-future__title">Точка возврата</span>
+            <span class="notebook-future__title">Ничего нового не открыли</span>
             <span class="notebook-future__status">в разработке</span>
           </div>
           <div class="notebook-future__entry">
             <span class="notebook-entry__roman">Глава V</span>
-            <span class="notebook-future__title">Маяк, который помнил</span>
+            <span class="notebook-future__title">МАЯК и его версия</span>
             <span class="notebook-future__status">в разработке</span>
           </div>
         </section>
       </div>
     </div>
   </main>
+
+  <dialog class="chapter-replay-dialog" id="chapter-replay-dialog" aria-labelledby="chapter-replay-title" aria-describedby="chapter-replay-message">
+    <div class="chapter-replay-dialog__body">
+      <span class="chapter-replay-dialog__eyebrow">Записи</span>
+      <h2 id="chapter-replay-title">Переиграть главу?</h2>
+      <p id="chapter-replay-message"></p>
+      <div class="chapter-replay-dialog__actions">
+        <button type="button" id="chapter-replay-cancel">Отмена</button>
+        <button type="button" id="chapter-replay-confirm">Начать сначала</button>
+      </div>
+    </div>
+  </dialog>
 
   <main class="app-shell palette-bar-warm" id="app-shell" hidden>
     <div class="atmosphere" id="atmosphere">
@@ -498,6 +515,11 @@ const elements: AppElements = {
   chapterTwoSummary: queryOrThrow<HTMLElement>('#chapter-two-summary'),
   chapterTwoAction: queryOrThrow<HTMLElement>('#chapter-two-action'),
   futureChapters: queryOrThrow<HTMLElement>('#notebook-future'),
+  replayDialog: queryOrThrow<HTMLDialogElement>('#chapter-replay-dialog'),
+  replayDialogTitle: queryOrThrow<HTMLElement>('#chapter-replay-title'),
+  replayDialogMessage: queryOrThrow<HTMLElement>('#chapter-replay-message'),
+  replayDialogCancel: queryOrThrow<HTMLButtonElement>('#chapter-replay-cancel'),
+  replayDialogConfirm: queryOrThrow<HTMLButtonElement>('#chapter-replay-confirm'),
   sceneHeading: queryOrThrow<HTMLElement>('#scene-heading'),
   chapterTwoVideos: Array.from(
     document.querySelectorAll<HTMLVideoElement>('#app-shell .chapter-fight-background video'),
@@ -690,7 +712,7 @@ async function boot(): Promise<void> {
     elements.chapterOneIncomplete.hidden = !chapterOneStarted || chapterOneCompleted;
     elements.chapterOneSummary.hidden = !chapterOneCompleted;
     elements.chapterOneAction.textContent = chapterOneCompleted
-      ? 'перечитать'
+      ? 'переиграть'
       : chapterOneStarted
         ? 'продолжить'
         : 'начать';
@@ -809,7 +831,7 @@ async function boot(): Promise<void> {
     elements.chapterTwoIncomplete.hidden = !chapterTwoStarted || chapterTwoCompleted;
     elements.chapterTwoSummary.hidden = !chapterTwoCompleted;
     elements.chapterTwoAction.textContent = chapterTwoCompleted
-      ? 'перечитать'
+      ? 'переиграть'
       : chapterTwoStarted
         ? 'продолжить'
         : 'вспомнить';
@@ -1751,6 +1773,57 @@ async function boot(): Promise<void> {
     persist();
   };
 
+  let replayChapterPending: 1 | 2 | null = null;
+
+  const openReplayDialog = (chapter: 1 | 2): void => {
+    replayChapterPending = chapter;
+    elements.replayDialogTitle.textContent = `Переиграть главу ${chapter === 1 ? 'I' : 'II'}?`;
+    elements.replayDialogMessage.textContent = chapter === 1
+      ? 'Глава начнётся сначала. Прогресс главы II и сохранённые в ней ответы будут удалены.'
+      : 'Глава начнётся сначала. Её текущая версия и прогресс следующих глав будут удалены.';
+    if (!elements.replayDialog.open) {
+      elements.replayDialog.showModal();
+    }
+    elements.replayDialogCancel.focus();
+  };
+
+  const replayChapterFromStart = async (chapter: 1 | 2): Promise<void> => {
+    const keepEarlier = (value: number): boolean => value < chapter;
+    chapterProgress = {
+      ...chapterProgress,
+      startedChapters: [...chapterProgress.startedChapters.filter(keepEarlier), chapter],
+      completedChapters: chapterProgress.completedChapters.filter(keepEarlier),
+      unlockedChapters: [...new Set([
+        ...chapterProgress.unlockedChapters.filter((value) => value <= chapter),
+        1,
+        chapter,
+      ])].sort((a, b) => a - b),
+      chapter1Variables: chapter === 1 ? {} : chapterProgress.chapter1Variables,
+      chapter2Variables: {},
+    };
+    storyScrollTop[chapter] = 0;
+    if (chapter === 1) storyScrollTop[2] = 0;
+    unreliableState = createInitialUnreliableState();
+    saveManager.clear();
+    chapterProgressManager.save(chapterProgress);
+    syncRealProgressToDebug();
+    updateChapterMenu();
+
+    audioManager.onUserInteraction();
+    musicManager.unlock();
+    if (chapter === 1) {
+      const chapterPreload = audioManager.preloadChapter(1);
+      await transitionToScreen('opening_bar', 0, async () => {
+        await chapterPreload;
+        await restartStory(true);
+        backgroundManager.resume();
+      });
+      return;
+    }
+
+    await startChapterTwo(true);
+  };
+
   const goBackToChoice = async (): Promise<void> => {
     if (!choiceCheckpoint || choiceCheckpoint.selectedIndex === undefined) {
       return;
@@ -1869,7 +1942,29 @@ async function boot(): Promise<void> {
     }
   });
 
+  elements.replayDialogCancel.addEventListener('click', () => {
+    replayChapterPending = null;
+    elements.replayDialog.close();
+  });
+
+  elements.replayDialogConfirm.addEventListener('click', () => {
+    const chapter = replayChapterPending;
+    replayChapterPending = null;
+    elements.replayDialog.close();
+    if (chapter !== null) void replayChapterFromStart(chapter);
+  });
+
+  elements.replayDialog.addEventListener('click', (event) => {
+    if (event.target !== elements.replayDialog) return;
+    replayChapterPending = null;
+    elements.replayDialog.close();
+  });
+
   elements.chapterOneButton.addEventListener('click', () => {
+    if (chapterProgress.completedChapters.includes(1)) {
+      openReplayDialog(1);
+      return;
+    }
     const openChapter = async (): Promise<void> => {
       audioManager.onUserInteraction();
       musicManager.unlock();
@@ -1911,6 +2006,10 @@ async function boot(): Promise<void> {
 
   elements.chapterTwoButton.addEventListener('click', () => {
     if (!chapterProgress.unlockedChapters.includes(2)) return;
+    if (chapterProgress.completedChapters.includes(2)) {
+      openReplayDialog(2);
+      return;
+    }
     audioManager.onUserInteraction();
     musicManager.unlock();
     if (!chapterProgress.startedChapters.includes(2)) {
