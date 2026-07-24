@@ -87,7 +87,7 @@ var e=(e,t)=>()=>(t||(e((t={exports:{}}).exports,t),e=null),t.exports);(function
     </div>
   </main>
 
-  <main class="app-shell palette-bar-warm" id="app-shell" style="--chapter-zero-background-image: url('images/backgrounds/chapter-00-washroom.webp')" hidden>
+  <main class="app-shell palette-bar-warm" id="app-shell" style="--chapter-zero-background-image: url('/nill-quest-demo/images/backgrounds/chapter-00-washroom.webp')" hidden>
     <div class="atmosphere" id="atmosphere">
       <div class="bg-gradient"></div>
       <div class="chapter-bar-background" aria-hidden="true">
