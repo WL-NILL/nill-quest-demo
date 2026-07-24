@@ -35,6 +35,18 @@
       #boot-loading strong {
         font: 400 15px/1.45 Georgia, serif;
       }
+      #boot-loading button {
+        justify-self: start;
+        padding: 0;
+        border: 0;
+        border-bottom: 1px solid rgba(145, 174, 197, 0.34);
+        color: rgba(185, 199, 209, 0.72);
+        background: transparent;
+        font: 500 10px/1.8 system-ui, sans-serif;
+        letter-spacing: 0.1em;
+        text-transform: lowercase;
+        cursor: pointer;
+      }
       #boot-loading i {
         position: relative;
         display: block;
@@ -61,7 +73,7 @@
         #boot-loading i::after { width: 62%; animation: none; }
       }
     </style>
-    <script type="module" crossorigin src="/nill-quest-demo/assets/index-Bo_lvSNF.js"></script>
+    <script type="module" crossorigin src="/nill-quest-demo/assets/index-B4CxjJ7N.js"></script>
     <link rel="stylesheet" crossorigin href="/nill-quest-demo/assets/index-DHBYj4uh.css">
   </head>
   <body>
@@ -70,9 +82,23 @@
         <small>загрузка</small>
         <strong>Подготавливаем историю</strong>
         <i aria-hidden="true"></i>
+        <button id="boot-loading-retry" type="button" hidden>попробовать снова</button>
       </div>
     </div>
     <div id="app"></div>
+    <script>
+      window.setTimeout(() => {
+        const loader = document.getElementById('boot-loading');
+        if (!loader || loader.classList.contains('is-hidden')) return;
+        const title = loader.querySelector('strong');
+        const retry = document.getElementById('boot-loading-retry');
+        if (title) title.textContent = 'Загрузка заняла слишком много времени';
+        if (retry) {
+          retry.hidden = false;
+          retry.addEventListener('click', () => window.location.reload(), { once: true });
+        }
+      }, 15000);
+    </script>
     <noscript>Для запуска истории требуется JavaScript.</noscript>
   </body>
 </html>
